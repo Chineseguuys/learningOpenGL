@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${default}"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/local/bin/clang",
+            "compileCommands": "${workspaceFolder}/17Texture/build/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

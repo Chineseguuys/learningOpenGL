@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/yjh/work/code/opengl/self_test/03/build",
+  "command": "clang++    -g   -o CMakeFiles/opengl_shader.dir/main.cpp.o -c /home/yjh/work/code/opengl/self_test/03/main.cpp",
+  "file": "/home/yjh/work/code/opengl/self_test/03/main.cpp"
+}
+]
