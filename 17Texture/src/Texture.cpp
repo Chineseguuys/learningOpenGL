@@ -31,6 +31,7 @@ Texture::Texture(const std::string& path)
     GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE) );
 
     GLCALL( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer) );
+    // 解绑
     GLCALL( glBindTexture(GL_TEXTURE_2D, 0) );
 
     if (m_LocalBuffer)
@@ -44,10 +45,13 @@ Texture::~Texture() {
 }
 
 void Texture::Bind(unsigned int slot /* = 0*/) const {
+    // 将纹理放在指定的插槽当中
     GLCALL( glActiveTexture(GL_TEXTURE0 + slot) );
+    // 绑定纹理
     GLCALL( glBindTexture(GL_TEXTURE_2D, m_TextureID) );
 }
 
 void Texture::UnBind() const {
+    // 解绑纹理
     GLCALL( glBindTexture(GL_TEXTURE_2D, 0) );
 }

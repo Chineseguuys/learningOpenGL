@@ -135,7 +135,7 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello OpenGL", NULL, NULL);
+    window = glfwCreateWindow(640, 640, "Hello OpenGL", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -153,47 +153,51 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    /**
-     * @brief 在这些顶点的数据中，包含了两个三角形的所有的顶点。由于两个三角形的斜边是重合的，意味着
-     * 其中的两个顶点的坐标的值是完全一致的。这浪费了大量的内存空间
-     */
-/*
-    float position[] = {
-        -0.5f, -0.5f,   // 第一个直角三角形
-        0.5f,  -0.5f,
-        0.5f,   0.5f,
-
-        0.5f,   0.5f,   // 第二个直角三角形
-        -0.5f,  0.5f,
-        -0.5f,  -0.5f
-    };
-*/
 
     // 顶点坐标和纹理坐标
+    // 顶点的坐标以中间为坐标的零点(0,0)
+    // 纹理坐标则从图片的左下角开始为 (0,0)；右上角为(1, 1) 两个坐标的标准不同
+    // 实际的坐标应该是 4 维的向量，对于平面图像，可以只指定前面的两个维度的数据 这里补充了后面的两个维度
     float position[] = {
-        -0.5f, -0.5f, 0.0f, 0.0f,   
-        0.5f,  -0.5f, 1.0f, 0.0f,
-        0.5f,   0.5f, 1.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 1.0f
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.5f,  -0.5f, 0.0f, 1.0f, 1.0f, 0.0f,
+        0.5f,   0.5f, 0.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f
     };
 
     unsigned int indices[] = {
-        0, 1, 2 ,   // 这些顶点构成了第一个三角形
-        2, 3, 0     // 这些顶点构成了第二个三角形
+        0, 1, 2 ,   // 这些顶点构成了第一个三角形 这个三角形位于右下角 两个三角形共用了两个顶点
+        2, 3, 0     // 这些顶点构成了第二个三角形 这个三角形位于左上角
     };
 
-
+    // 涉及到混合。注意到图片 ChernoLogoAlpha.png 是一个包含了 Alpha 透明度分量的图片，
+    // 在涉及到透明分量的渲染的时候，就需要确定透明部分的叠加和渲染方式。默认的渲染方式往往
+    // 无法满足我们的需求
+    // 另外的两个 jpg 的图片没有透明的分量，因此渲染的时候不存在 png 存在的问题
+    GLCALL( glEnable(GL_BLEND) );
+    // blendFunc 指定了混合的方式， src 是我们需要渲染的素材的 RGBA 数据。dst 则是我们要渲染到的缓冲区（在这里可以理解为窗口的背景）
+    // 我们需要将我们的图片渲染到背景当中，如果图片是半透明或者全透明的，那么就需要考虑前景色和背景色混合之后的颜色。(就像将一个红色的玻
+    // 璃和一个绿色的玻璃叠在一起, 叠在一起的颜色)
+    // 针对每一个像素点，下面的代码的算法公式为：
+    // R = R_src * A_src + (1 - A_src) * R_dst
+    // G = G_src * A_src + (1 - A_src) * G_dst
+    // B = B_src * A_src + (1 - A_src) * B_dst
+    // A = A_src * A_src + (1 - A_src) * A_dst
+    // 混合之后的颜色根据上面的公式来进行计算
+    GLCALL( glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) );
+    //GLCALL( glBlendFunc(GL_ONE, GL_ZERO) );   // 这是 OpenGL 默认的混合的方式
+    GLCALL( glBlendEquation(GL_FUNC_ADD) );
     // 创建顶点数组对象
     //unsigned int vao;
     //GLCALL( glGenVertexArrays(1, &vao) );
     //GLCALL( glBindVertexArray(vao) );
 
     // 每一个顶点具有四个浮点数，其中的两个是顶点坐标，另外的两个是纹理坐标
-    VertexBuffer* vb =  new VertexBuffer(position , 4 * 4 * sizeof(float) );
+    VertexBuffer* vb =  new VertexBuffer(position , 4 * 6 * sizeof(float) );
     VertexArray va;
     VertexBufferLayout layout;
     // 前面的两个是顶点坐标，另外两个是纹理坐标
-    layout.Push<float>(2);
+    layout.Push<float>(4);
     layout.Push<float>(2);
     va.AddBuffer(*vb, layout);
 
@@ -266,12 +270,13 @@ int main(void)
 
 
     // 纹理
-    Texture texture("./res/textures/wall.jpg");
+    Texture texture("./res/textures/ChernoLogoAlpha.png");
     // 我们将纹理绑定到 0 号插槽当中
     texture.Bind(0);
     // 我们的纹理被绑定到了 0 插槽当中，所以下面的参数传递为 0
     shader.SetUniform1i("u_Texture", 0);
-    // 这个 uniform variable 目前已经不需要再使用了
+    // 这个 uniform variable 目前已经不需要再使用了。对于在 shader 当中没有被使用的
+    // Uniform variable， 在 C 程序当中无法再找到这个变量，并且无法设置值
     //shader.SetUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
 
     GLCALL( glBindVertexArray(0) );
@@ -288,13 +293,12 @@ int main(void)
 
     Renderer renderer;
 
-    float r = 0.2f;
-    float increment = 0.025;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        //glClear(GL_COLOR_BUFFER_BIT);
+        GLCALL( glClearColor(0.0f, 1.0f, 0.0f, 1.0f) ); // background color
+        GLCALL( glClear(GL_COLOR_BUFFER_BIT) );
         renderer.Clear();
 /**
         // 添加代码在这个黑色的窗口里面渲染一个三角形
@@ -311,9 +315,7 @@ int main(void)
         //GLCALL( glUniform4f(location, r, 0.3f, 0.8f, 1.0f) );
 
         shader.Bind();
-        //shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
-        shader.SetUniform1i("u_Texture", 0);
-
+        //shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);indices
         //GLCALL( glBindBuffer(GL_ARRAY_BUFFER, buffer) );
         //GLCALL( glEnableVertexAttribArray(0) );
         //GLCALL( glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), static_cast<const void*>(0)) );
@@ -328,13 +330,6 @@ int main(void)
         renderer.Draw(va, *ib, shader);
 
         // GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-
-        if (r > 1.0f)
-            increment = -0.025;
-        if (r < 0.0f)
-            increment = 0.025;
-        
-        r += increment;
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

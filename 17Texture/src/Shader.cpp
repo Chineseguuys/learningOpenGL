@@ -140,7 +140,7 @@ int Shader::GetUniformLocation(const std::string& name) {
     GLCALL( int location = glGetUniformLocation(m_ShaderID, name.c_str()) );
 
 #ifdef DEBUG
-    printf("[%s:L%d]location for %s is %d\n", name.c_str(), location);
+    printf("[%s:L%d]location for %s is %d\n", __FUNCTION__, __LINE__, name.c_str(), location);
 #endif /* DEBUG */
 
     if (location == -1) {
