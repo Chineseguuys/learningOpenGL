@@ -7,7 +7,7 @@
             ],
             "defines": [],
             "compilerPath": "/usr/local/bin/clang",
-            "compileCommands": "${workspaceFolder}/21ImGui_OpenGL/build/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/23Testing_Examples/build/compile_commands.json"
         }
     ],
     "version": 4
