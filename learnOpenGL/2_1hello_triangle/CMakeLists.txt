@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16.3)
 
-project(vertex_array)
+project(hello_triangle)
 
 # some variables 如果使用 llvm 的链接器，需要加上下面的 flags
 set (LINK_FLAGS "-lc++ -lc++abi -fuse-ld=lld")

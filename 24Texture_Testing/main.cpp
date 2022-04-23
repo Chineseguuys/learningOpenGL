@@ -26,8 +26,8 @@
 
 
 #include "test/TestClearColor.h"
+#include "test/TestTexture2D.h"
 #include "test/Test.h"
-
 // 有关矩阵和变换的介绍的内容可以看这里：https://learnopengl.com/Getting-started/Transformations
 // 这里使用的 ImGui 版本和原始视频中的版本在用法上有一定的差异，因此代码和视频中并不是完全对应的。但是结构保持一致
 // 如视频中所示，使用 ImGui 可以方便的提供一种实时修改 OpenGL 相关参数的方式，可以更加直观的观察 OpenGL 相关设置
@@ -73,6 +73,7 @@ int main(void)
     currentTest = testMenu;
 
     testMenu->RegisterTest<test::TestClearColor>("Clear Color");
+    testMenu->RegisterTest<test::TestTexture2D>("Texture2D");
 
     // ImGui
     ImGui::CreateContext();
