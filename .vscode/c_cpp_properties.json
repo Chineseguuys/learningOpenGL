@@ -7,7 +7,7 @@
             ],
             "defines": [],
             "compilerPath": "/usr/local/bin/clang",
-            "compileCommands": "${workspaceFolder}/learnOpenGL/8_1Light/build/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/learnOpenGL/9_4LightCasters_SmoothSplotlight/build/compile_commands.json"
         }
     ],
     "version": 4

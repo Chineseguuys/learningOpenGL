@@ -112,7 +112,7 @@ int main()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     shader.use();
-    shader.setFloat("xShift", 0.5);
+    shader.setFloat("xShift", 0.0);
 
     while (!glfwWindowShouldClose(window))
     {

@@ -201,7 +201,7 @@ int main()
     glm::vec3 cameraRight = glm::normalize( glm::cross( up, cameraDirection) );
 
     glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-    // 现在 cameraDirection 和 cameraRight 以及 cameraUp 三个向量是两两正交的单位向量
+    // 现在 cameraDirection 和 cameraRight 以及 cameraUp 三个向量是两两正交的单位向量 这三个向量围绕着摄像机构成了一个坐标系
 
     // lookat 矩阵：LookAt矩阵作为观察矩阵可以很高效地把所有世界坐标变换到刚刚定义的观察空间
     glm::mat4 view = glm::lookAt(cameraPos, cameraTarget, up);
