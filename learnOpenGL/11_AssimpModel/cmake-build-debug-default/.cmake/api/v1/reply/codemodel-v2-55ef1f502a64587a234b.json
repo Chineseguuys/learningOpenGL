@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16.3"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "assimp_model",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "assimp_model::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-assimp_model-Debug-c859d76f119f9fba38ad.json",
+					"name" : "assimp_model",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "camera::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-camera-Debug-e703bad19a4acd9a21f4.json",
+					"name" : "camera",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "mesh::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mesh-Debug-b5f290210988aba0465d.json",
+					"name" : "mesh",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "stb_image::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-stb_image-Debug-b34649f6c9789058aaee.json",
+					"name" : "stb_image",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/11_AssimpModel/cmake-build-debug-default",
+		"source" : "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/11_AssimpModel"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

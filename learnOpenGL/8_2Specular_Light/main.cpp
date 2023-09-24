@@ -1,6 +1,9 @@
 #define __USING_IMGUI__
 #define __GL_DEEP_TEST__
 
+#define LIGHT_LOOPER
+#define DISABLE_CURSOR
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -22,26 +25,26 @@
 
 #include "Camera.h"
 
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void togger_button(const char* str_id, bool* v);
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+void togger_button(const char *str_id, bool *v);
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 800;
 
-const char* COLOR_VERTEX_SHADER_FILEPATH = "res/glsl/color.vs";
-const char* COLOR_FRAGMENT_SHADER_FILEPATH = "res/glsl/color.fs";
-const char* LIGHT_VERTEX_SHADER_FILEPATH = "res/glsl/light_cube.vs";
-const char* LIGHT_FRAGMENT_SHADER_FILEPATH = "res/glsl/light_cube.fs";
+const char *COLOR_VERTEX_SHADER_FILEPATH = "res/glsl/color.vs";
+const char *COLOR_FRAGMENT_SHADER_FILEPATH = "res/glsl/color.fs";
+const char *LIGHT_VERTEX_SHADER_FILEPATH = "res/glsl/light_cube.vs";
+const char *LIGHT_FRAGMENT_SHADER_FILEPATH = "res/glsl/light_cube.fs";
 
-const char* TEXTURE1_IMAGE_FILEPATH = "res/textures/awesomeface.png";
-const char* TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
+const char *TEXTURE1_IMAGE_FILEPATH = "res/textures/awesomeface.png";
+const char *TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
 
-struct camera_view {
+struct camera_view
+{
     float camera_radius;
     float camera_angle;
 };
@@ -58,13 +61,13 @@ float pitch = 0.0f;
 float lastX = SCR_WIDTH / 2.0;
 float lastY = SCR_HEIGHT / 2.0;
 
-// Imgui 
+// Imgui
 float mix_parameter = 0.5f;
 float texture_coord = 1.0f;
 float fov_angle = 45.0f;
 
 // Camera
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);   // 光源在世界坐标中的位置
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f); // 光源在世界坐标中的位置
 glm::vec3 lightCubeColor(1.0f, 1.0f, 1.0f);
 float ambientStrength = 0.1f;
 int shininess = 32;
@@ -88,7 +91,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -117,49 +120,48 @@ int main()
 
     // 给出了一个立方体的所有的顶点 每一个面具有两个三角形，一个有六个顶点，顶点当中有重复
     float vertices[] = {
-    // position            // texture coord  // 法线向量
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //4
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //9
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //14
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //19
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //24
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //29
+        // position            // texture coord  // 法线向量
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 4
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,  // 9
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,   // 14
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,   // 19
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,  // 24
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 29
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 34
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 39
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 44
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 49
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 54
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 59
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 34
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,  // 39
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // 44
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // 49
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  // 54
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 59
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 64
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,  // 69
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,  // 74
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f, // 79
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 84
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 89
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,   // 64
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,  // 69
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 74
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 79
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,  // 84
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,   // 89
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 94
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 99
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 104
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 109
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 114
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 119
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // 94
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  // 99
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 104
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 109
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // 114
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // 119
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 124
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 129
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 134
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 139
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 144
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 149
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 124
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,  // 129
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,   // 134
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,   // 139
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,  // 144
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 149
 
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f
-    };
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
 
     unsigned int VBO, cubeVAO;
     glGenVertexArrays(1, &cubeVAO);
@@ -169,11 +171,11 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(cubeVAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     unsigned int lightCubeVAO;
@@ -182,20 +184,26 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
 #ifdef __USING_IMGUI__
     // ImGui
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+#endif
+
+#ifdef DISABLE_CURSOR
+    // 在窗口中隐藏鼠标的指针，可以防止鼠标的指针离开 window, 并且可以实现连续的视角切换
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 #endif
 
     while (!glfwWindowShouldClose(window))
@@ -223,7 +231,7 @@ int main()
             ImGui::Begin("TEST TEXTURE MIX");
 
             ImGui::SliderFloat("ambient Strength", &ambientStrength, 0.1, 1.0f);
-            ImGui::SliderInt("shininess", &shininess, 2, 256);      // 镜面光照的反光度
+            ImGui::SliderInt("shininess", &shininess, 2, 256); // 镜面光照的反光度
             ImGui::ColorEdit3("cube color", &lightCubeColor[0]);
             togger_button("ambinet", &ambientON);   // 是否打开全局光照
             togger_button("diffuse", &diffuseON);   // 是否打开漫反射光照
@@ -245,7 +253,14 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         lightingShader.setMatrix4f("projection", projection);
         lightingShader.setMatrix4f("view", view);
+#ifndef LIGHT_LOOPER
         lightingShader.setVec3("lightPos", lightPos);
+#else
+        lightPos.x = sin(glfwGetTime()) * 2.0f;
+        lightPos.z = cos(glfwGetTime()) * 2.0f;
+        lightPos.y = 0.0f;
+        lightingShader.setVec3("lightPos", lightPos);
+#endif
         lightingShader.setVec3("viewPos", camera.mPosition);
 
         // 从 bool 类型转换为 float 类型是安全的
@@ -271,7 +286,6 @@ int main()
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
         lightCubeShader.setMatrix4f("model", model);
-
 
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -307,36 +321,42 @@ void processInput(GLFWwindow *window)
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { // W 拉近物体
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    { // W 拉近物体
         camera.ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) { // A 向左
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    { // A 向左
         camera.ProcessKeyboard(Camera_Movement::LEFT, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) { // S 拉远物体
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    { // S 拉远物体
         camera.ProcessKeyboard(Camera_Movement::BACKWARD, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) { // D 拉远物体
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    { // D 拉远物体
         camera.ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {    // 上键 向上移动物体
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    { // 上键 向上移动物体
         camera.ProcessKeyboard(Camera_Movement::UP, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {  // 下键  向下移动物体
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    { // 下键  向下移动物体
         camera.ProcessKeyboard(Camera_Movement::DOWN, deltaTime);
     }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
+    // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 {
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
@@ -356,26 +376,27 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
-void togger_button(const char* str_id, bool* v)
+void togger_button(const char *str_id, bool *v)
 {
-    ImVec4* colors = ImGui::GetStyle().Colors;
+    ImVec4 *colors = ImGui::GetStyle().Colors;
     ImVec2 p = ImGui::GetCursorScreenPos();
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
     float height = ImGui::GetFrameHeight();
     float width = height * 1.55f;
     float radius = height * 0.50f;
 
     ImGui::InvisibleButton(str_id, ImVec2(width, height));
-    if (ImGui::IsItemClicked()) *v = !*v;
-    ImGuiContext& gg = *GImGui;
+    if (ImGui::IsItemClicked())
+        *v = !*v;
+    ImGuiContext &gg = *GImGui;
     float ANIM_SPEED = 0.085f;
-    if (gg.LastActiveId == gg.CurrentWindow->GetID(str_id))// && g.LastActiveIdTimer < ANIM_SPEED)
+    if (gg.LastActiveId == gg.CurrentWindow->GetID(str_id)) // && g.LastActiveIdTimer < ANIM_SPEED)
         float t_anim = ImSaturate(gg.LastActiveIdTimer / ANIM_SPEED);
     if (ImGui::IsItemHovered())
         draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), ImGui::GetColorU32(*v ? colors[ImGuiCol_ButtonActive] : ImVec4(0.78f, 0.78f, 0.78f, 1.0f)), height * 0.5f);

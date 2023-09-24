@@ -18,18 +18,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
 
-const char* VERTEX_SHADER_FILEPATH = "res/glsl/shader.vs";
-const char* FRAGMENT_SHADER_FILEPATH = "res/glsl/shader.fs";
-const char* TEXTURE1_IMAGE_FILEPATH = "res/textures/wall.jpg";
-const char* TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
+const char *VERTEX_SHADER_FILEPATH = "res/glsl/shader.vs";
+const char *FRAGMENT_SHADER_FILEPATH = "res/glsl/shader.fs";
+const char *TEXTURE1_IMAGE_FILEPATH = "res/textures/wall.jpg";
+const char *TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
 
 int main()
 {
@@ -47,7 +46,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -71,10 +70,10 @@ int main()
     // ------------------------------------------------------------------
     float vertices[] = {
         // Positions          // Colors           // Texture Coords
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // Top Right
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Bottom Right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // Bottom Left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // Top Left 
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // Top Right
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // Bottom Right
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
+        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // Top Left
     };
 
     unsigned int indexs[] = {
@@ -83,19 +82,17 @@ int main()
     };
 
     // 指向纹理坐标几个关键坐标的指针。方便通过 imgui 来方便的调节纹理坐标的值
-    float* vertices_pointer[] = {
-        &vertices[6],  &vertices[7],
+    float *vertices_pointer[] = {
+        &vertices[6], &vertices[7],
         &vertices[14],
-        &vertices[31]
-    };
-
+        &vertices[31]};
 
     // 创建变换矩阵
     const glm::mat4 base = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0f, 0.0f));
+    // 单位矩阵
     glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0f, 0.0f));
     // 注意 rotate 函数的效果是叠加的
-    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));   // 绕 z 轴旋转，因为我们的图像在 x-y 平面上
-
+    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f)); // 绕 z 轴旋转，因为我们的图像在 x-y 平面上
 
     unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -113,13 +110,12 @@ int main()
 
     // Location 0
     // 顶点数据的性质 注意颜色和顶点的偏移量和 location
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(0);   // for location 0
-    glEnableVertexAttribArray(1);   // for location 1
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+    glEnableVertexAttribArray(0); // for location 0
+    glEnableVertexAttribArray(1); // for location 1
     glEnableVertexAttribArray(2);
-
 
     // 创建 Texture1
     unsigned int texture1;
@@ -127,7 +123,7 @@ int main()
     // 一定要先 bind 之后，设置的属性才可以生效
     glBindTexture(GL_TEXTURE_2D, texture1);
     // Set our texture parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);   // Set texture wrapping to GL_REPEAT
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // Set texture wrapping to GL_REPEAT
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // Set texture filtering
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -135,23 +131,24 @@ int main()
 
     // 加载一张图片
     int width, height, nrChannels;
-    unsigned char* image = stbi_load(TEXTURE1_IMAGE_FILEPATH, &width, &height, &nrChannels, 0);
+    unsigned char *image = stbi_load(TEXTURE1_IMAGE_FILEPATH, &width, &height, &nrChannels, 0);
 
-    if (image != NULL) {
+    if (image != NULL)
+    {
         /**
          * @brief 函数的参数非常的长，下面进行讲解
          * 第一个参数指定了纹理目标(Target)。设置为GL_TEXTURE_2D意味着会生成与当前绑定的纹理对象在同一个目标上的纹理
          *      （任何绑定到GL_TEXTURE_1D和GL_TEXTURE_3D的纹理不会受到影响）
-         * 
+         *
          * 第二个参数为纹理指定多级渐远纹理的级别，如果你希望单独手动设置每个多级渐远纹理的级别的话。这里我们填0，也就是基本级别
-         * 
+         *
          * 第三个参数告诉OpenGL我们希望把纹理储存为何种格式。我们的图像只有RGB值，因此我们也把纹理储存为RGB值
-         * 
+         *
          * 第四个和第五个参数设置最终的纹理的宽度和高度。我们之前加载图像的时候储存了它们，所以我们使用对应的变量。
          * 下个参数应该总是被设为0（历史遗留的问题）
-         * 
+         *
          * 第七第八个参数定义了源图的格式和数据类型。我们使用RGB值加载这个图像，并把它们储存为char(byte)数组，我们将会传入对应值
-         * 
+         *
          * 最后一个参数是真正的图像数据
          */
 
@@ -162,7 +159,8 @@ int main()
          */
         glGenerateMipmap(GL_TEXTURE_2D);
     }
-    else {
+    else
+    {
         std::cout << "Failed to load texture" << std::endl;
     }
 
@@ -175,8 +173,10 @@ int main()
     // 一定要先 bind 之后，设置的属性才可以生效
     glBindTexture(GL_TEXTURE_2D, texture2);
     // Set our texture parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);   // Set texture wrapping to GL_REPEAT
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // Set texture wrapping to GL_REPEAT
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
     // Set texture filtering
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -184,21 +184,22 @@ int main()
     // 加载一张图片
     image = stbi_load(TEXTURE2_IMAGE_FILEPATH, &width, &height, &nrChannels, 0);
 
-    if (image != NULL) {
+    if (image != NULL)
+    {
         /**
          * @brief 函数的参数非常的长，下面进行讲解
          * 第一个参数指定了纹理目标(Target)。设置为GL_TEXTURE_2D意味着会生成与当前绑定的纹理对象在同一个目标上的纹理
          *      （任何绑定到GL_TEXTURE_1D和GL_TEXTURE_3D的纹理不会受到影响）
-         * 
+         *
          * 第二个参数为纹理指定多级渐远纹理的级别，如果你希望单独手动设置每个多级渐远纹理的级别的话。这里我们填0，也就是基本级别
-         * 
+         *
          * 第三个参数告诉OpenGL我们希望把纹理储存为何种格式。我们的图像只有RGB值，因此我们也把纹理储存为RGB值
-         * 
+         *
          * 第四个和第五个参数设置最终的纹理的宽度和高度。我们之前加载图像的时候储存了它们，所以我们使用对应的变量。
          * 下个参数应该总是被设为0（历史遗留的问题）
-         * 
+         *
          * 第七第八个参数定义了源图的格式和数据类型。我们使用RGB值加载这个图像，并把它们储存为char(byte)数组，我们将会传入对应值
-         * 
+         *
          * 最后一个参数是真正的图像数据
          */
 
@@ -209,14 +210,14 @@ int main()
          */
         glGenerateMipmap(GL_TEXTURE_2D);
     }
-    else {
+    else
+    {
         std::cout << "Failed to load texture" << std::endl;
     }
 
     // 纹理已经设置，图像可以删除了。
     stbi_image_free(image);
-
-
+    // 解除绑定
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -229,7 +230,8 @@ int main()
     // ImGui
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 #endif
@@ -258,7 +260,7 @@ int main()
         {
             ImGui::Begin("TEST TEXTURE MIX");
 
-            ImGui::Text("change two textures mix parameter");               // Display some text (you can use a format strings too)
+            ImGui::Text("change two textures mix parameter"); // Display some text (you can use a format strings too)
             ImGui::SliderFloat("mix para", &mix_parameter, 0.0f, 1.0f);
             ImGui::SliderFloat("texcoord range", &texCorrd_range, 0.0f, 8.0f);
             ImGui::SliderFloat("rotate angle", &rotate_angle, 0.0f, 360.0f);
@@ -269,7 +271,8 @@ int main()
 #endif /* __USING_IMGUI__ */
 
         // 作用与纹理坐标
-        for (float* v : vertices_pointer) {
+        for (float *v : vertices_pointer)
+        {
             *v = texCorrd_range;
         }
 
@@ -278,7 +281,7 @@ int main()
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
 
         // 重新计算旋转角度
-        trans = glm::rotate(base, glm::radians(rotate_angle), glm::vec3(0.0f, 0.0f, 1.0f));   // 绕 z 轴旋转，因为我们的图像在 x-y 平面上
+        trans = glm::rotate(base, glm::radians(rotate_angle), glm::vec3(0.0f, 0.0f, 1.0f)); // 绕 z 轴旋转，因为我们的图像在 x-y 平面上
 
         // 激活特定的插槽
         // 绑定 texture
@@ -329,9 +332,9 @@ void processInput(GLFWwindow *window)
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
+    // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }

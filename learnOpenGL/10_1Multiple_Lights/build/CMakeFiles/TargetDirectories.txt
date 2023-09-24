@@ -1,0 +1,7 @@
+/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build/CMakeFiles/edit_cache.dir
+/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build/CMakeFiles/multiple_lights.dir
+/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build/CMakeFiles/imgui_impl_opengl3.dir
+/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build/CMakeFiles/thecamera.dir
+/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build/CMakeFiles/rebuild_cache.dir
+/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build/CMakeFiles/stb_image.dir
+/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build/CMakeFiles/shader.dir

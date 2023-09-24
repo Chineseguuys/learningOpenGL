@@ -1,0 +1,17 @@
+# ninja log v5
+0	104	1692516807915917284	CMakeFiles/imgui_impl_opengl3.dir/source/imgui/backends/imgui_impl_opengl3.cpp.o	51a67c96bb950b10
+1	120	1692516807931917373	CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_impl_glfw.cpp.o	dbcb8883ee94d0a8
+1	266	1692516808075918176	CMakeFiles/thecamera.dir/source/Camera.cpp.o	71184f9c03142a37
+2	270	1692516808079918199	CMakeFiles/stb_image.dir/source/stbi_images.cpp.o	f7c1f2d91f5a6ff2
+267	300	1692516808111918378	libthecamera.a	ea2d625c1bd4e4ef
+270	300	1692516808111918378	libstb_image.a	29eadaadc272c042
+0	414	1692516808223919003	CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_demo.cpp.o	6b81fc2b589cdb2e
+2	447	1692516808255919182	CMakeFiles/shader.dir/source/Shader.cpp.o	3f14438a9b505a1b
+447	476	1692516808287919360	libshader.a	3a00cd739de6e7cb
+1	479	1692516808287919360	CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_tables.cpp.o	8211fd91c59dbd73
+1	620	1692516808427920143	CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_draw.cpp.o	b642a3aee4c517be
+0	785	1692516808591921058	CMakeFiles/multiple_lights.dir/main.cpp.o	3d7c51107f8718d0
+1	834	1692516808639921325	CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_widgets.cpp.o	7196fdb8fcaf326b
+1	861	1692516808667921483	CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui.cpp.o	eb4d848ebfbd18cb
+861	928	1692516808707921706	libimgui_impl_opengl3.a	868f7abfcb7ba07
+928	995	1692516808803922242	multiple_lights	99cc47d8bb760fd9

@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.16.3)
 project(pointLight)
 
 # some variables 如果使用 llvm 的链接器，需要加上下面的 flags
-set (LINK_FLAGS "-lc++ -lc++abi -fuse-ld=lld")
+set (LINK_FLAGS "-fuse-ld=lld")
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set (CMAKE_C_COMPILER "clang")
-set (CMAKE_CXX_COMPILER "clang++")
+set (CMAKE_C_COMPILER "clang-14")
+set (CMAKE_CXX_COMPILER "clang++-14")
 set (CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_BUILD_TYPE "Debug")
 #set (CMAKE_BUILD_TYPE "Release")
@@ -55,6 +55,12 @@ target_include_directories(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/source
         ${PROJECT_SOURCE_DIR}/source/imgui
         ${PROJECT_SOURCE_DIR}/source/imgui/backends
+)
+
+# 未知的原因导致这个目录没有默认在编译器的搜索路径里面
+target_link_directories(${PROJECT_NAME}
+    PUBLIC
+        /usr/local/lib/
 )
 
 target_link_libraries(${PROJECT_NAME}

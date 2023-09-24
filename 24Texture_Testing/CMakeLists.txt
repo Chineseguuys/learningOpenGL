@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.16.3)
 project(testing_cases)
 
 # some variables 如果使用 llvm 的链接器，需要加上下面的 flags
-set (LINK_FLAGS "-lc++ -lc++abi -fuse-ld=lld")
+set (LINK_FLAGS "-fuse-ld=lld")
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set (CMAKE_C_COMPILER "clang")
-set (CMAKE_CXX_COMPILER "clang++")
+set (CMAKE_C_COMPILER "clang-14")
+set (CMAKE_CXX_COMPILER "clang++-14")
 set (CMAKE_VERBOSE_MAKEFILE ON)
 
 # debug mode
@@ -104,9 +104,9 @@ target_include_directories(${PROJECT_NAME}
 # 编译 OpenGL 程序需要链接的动态库 + 代码中生成的静态库
 target_link_libraries(${PROJECT_NAME}
     GLEW 
-    glfw3
-    glad
-    GL 
+    glfw
+    /usr/local/lib/libglad.so
+    GL
     X11
     pthread
     Xrandr 

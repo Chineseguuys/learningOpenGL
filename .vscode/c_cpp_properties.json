@@ -6,8 +6,8 @@
                 "${default}"
             ],
             "defines": [],
-            "compilerPath": "/usr/local/bin/clang",
-            "compileCommands": "${workspaceFolder}/learnOpenGL/9_4LightCasters_SmoothSplotlight/build/compile_commands.json"
+            "compilerPath": "/usr/bin/clang-14",
+            "compileCommands": "${workspaceFolder}/learnOpenGL/11_AssimpModel/cmake-build/compile_commands.json"
         }
     ],
     "version": 4

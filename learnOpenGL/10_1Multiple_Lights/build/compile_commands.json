@@ -1,0 +1,67 @@
+[
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14   -I../source -I../source/imgui -I../source/imgui/backends  -g   -o CMakeFiles/multiple_lights.dir/main.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/main.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/main.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14   -I../source/imgui  -g   -o CMakeFiles/imgui_impl_opengl3.dir/source/imgui/backends/imgui_impl_opengl3.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/backends/imgui_impl_opengl3.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/backends/imgui_impl_opengl3.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14   -I../source/imgui  -g   -o CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_demo.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_demo.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_demo.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14   -I../source/imgui  -g   -o CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_draw.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_draw.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_draw.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14   -I../source/imgui  -g   -o CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_tables.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_tables.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_tables.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14   -I../source/imgui  -g   -o CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_widgets.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_widgets.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_widgets.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14   -I../source/imgui  -g   -o CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14   -I../source/imgui  -g   -o CMakeFiles/imgui_impl_opengl3.dir/source/imgui/imgui_impl_glfw.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_impl_glfw.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/imgui/imgui_impl_glfw.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14    -g   -o CMakeFiles/thecamera.dir/source/Camera.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/Camera.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/Camera.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14    -g   -o CMakeFiles/stb_image.dir/source/stbi_images.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/stbi_images.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/stbi_images.cpp"
+},
+
+{
+  "directory": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/build",
+  "command": "clang++-14    -g   -o CMakeFiles/shader.dir/source/Shader.cpp.o -c /home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/Shader.cpp",
+  "file": "/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/10_1Multiple_Lights/source/Shader.cpp"
+}
+]

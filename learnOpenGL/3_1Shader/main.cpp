@@ -5,15 +5,15 @@
 #include <math.h>
 #include "Shader.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
 
-const char* VERTEX_SHADER_FILEPATH = "res/shader.vs";
-const char* FRAGMENT_SHADER_FILEPATH = "res/shader.fs";
+const char *VERTEX_SHADER_FILEPATH = "res/shader.vs";
+const char *FRAGMENT_SHADER_FILEPATH = "res/shader.fs";
 
 int main()
 {
@@ -31,7 +31,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -54,20 +54,20 @@ int main()
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
-        0.00,  0.00, 0.0, 1.0f, 0.0f, 0.0f,
-        1.00,  0.00, 0.0, 0.0f, 1.0f, 0.0f,
-        0.87,  0.50, 0.0, 0.0f, 0.0f, 1.0f,
-        0.50,  0.87, 0.0, 1.0f, 0.0f, 0.0f,
-        0.00,  1.00, 0.0, 0.0f, 1.0f, 0.0f,
+        // 顶点位置 + 颜色
+        0.00, 0.00, 0.0, 1.0f, 0.0f, 0.0f,
+        1.00, 0.00, 0.0, 0.0f, 1.0f, 0.0f,
+        0.87, 0.50, 0.0, 0.0f, 0.0f, 1.0f,
+        0.50, 0.87, 0.0, 1.0f, 0.0f, 0.0f,
+        0.00, 1.00, 0.0, 0.0f, 1.0f, 0.0f,
         -0.50, 0.87, 0.0, 0.0f, 0.0f, 1.0f,
         -0.87, 0.50, 0.0, 1.0f, 0.0f, 0.0f,
         -1.00, 0.00, 0.0, 0.0f, 1.0f, 0.0f,
-        -0.87, -0.50,0.0, 0.0f, 0.0f, 1.0f,
-        -0.50, -0.87,0.0, 1.0f, 0.0f, 0.0f,
-        -0.00, -1.00,0.0, 0.0f, 1.0f, 0.0f,
+        -0.87, -0.50, 0.0, 0.0f, 0.0f, 1.0f,
+        -0.50, -0.87, 0.0, 1.0f, 0.0f, 0.0f,
+        -0.00, -1.00, 0.0, 0.0f, 1.0f, 0.0f,
         0.50, -0.87, 0.0, 0.0f, 0.0f, 1.0f,
-        0.87, -0.50, 0.0, 1.0f, 0.0f, 0.0f
-    };
+        0.87, -0.50, 0.0, 1.0f, 0.0f, 0.0f};
 
     unsigned int indexs[] = {
         0, 1, 2,
@@ -81,9 +81,7 @@ int main()
         0, 9, 10,
         0, 10, 11,
         0, 11, 12,
-        0, 12, 1
-    };
-
+        0, 12, 1};
 
     unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -101,15 +99,18 @@ int main()
 
     // Location 0
     // 顶点数据的性质 注意颜色和顶点的偏移量和 location
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(0);   // for location 0
-    glEnableVertexAttribArray(1);   // for location 1
+    // 顶点位置
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+    // 颜色值
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(0); // for location 0
+    glEnableVertexAttribArray(1); // for location 1
 
     glBindVertexArray(0);
 
-    // 线框模式
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // 线框模式  只绘制线条，不填充三角形区域的颜色
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     shader.use();
     shader.setFloat("xShift", 0.0);
@@ -156,9 +157,9 @@ void processInput(GLFWwindow *window)
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
+    // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }

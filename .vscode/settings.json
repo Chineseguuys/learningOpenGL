@@ -87,6 +87,13 @@
         "queue": "cpp",
         "ranges": "cpp",
         "span": "cpp",
-        "stack": "cpp"
-    }
+        "stack": "cpp",
+        "any": "cpp",
+        "charconv": "cpp",
+        "unordered_set": "cpp",
+        "source_location": "cpp",
+        "future": "cpp",
+        "shared_mutex": "cpp"
+    },
+    "cmake.sourceDirectory": "/home/yanjianghan/westdesk_1/code/opengl/17Texture"
 }

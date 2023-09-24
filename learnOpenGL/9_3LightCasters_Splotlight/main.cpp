@@ -22,34 +22,34 @@
 
 #include "Camera.h"
 #include "Material.h"
-#include "attenuation.h"    // 点光源的衰减
-
+#include "attenuation.h" // 点光源的衰减
 
 // function defination
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void togger_button(const char* str_id, bool* v);
-unsigned int loadTexture(const char* path);
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+void togger_button(const char *str_id, bool *v);
+unsigned int loadTexture(const char *path);
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 800;
 
-const char* COLOR_VERTEX_SHADER_FILEPATH = "res/glsl/lightingMaps.vs";
-const char* COLOR_FRAGMENT_SHADER_FILEPATH = "res/glsl/lightingMaps.fs";
-const char* LIGHT_VERTEX_SHADER_FILEPATH = "res/glsl/light_cube.vs";
-const char* LIGHT_FRAGMENT_SHADER_FILEPATH = "res/glsl/light_cube.fs";
+const char *COLOR_VERTEX_SHADER_FILEPATH = "res/glsl/lightingMaps.vs";
+const char *COLOR_FRAGMENT_SHADER_FILEPATH = "res/glsl/lightingMaps.fs";
+const char *LIGHT_VERTEX_SHADER_FILEPATH = "res/glsl/light_cube.vs";
+const char *LIGHT_FRAGMENT_SHADER_FILEPATH = "res/glsl/light_cube.fs";
 
-const char* TEXTURE1_IMAGE_FILEPATH = "res/textures/awesomeface.png";
-const char* TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
-const char* TEXTURE3_IMAGE_FILEPATH = "res/textures/container2.png";
-const char* SPECULAR1_LIGHTMAP_FILEPATH = "res/textures/container2_specular.png";
-const char* SPECULAR2_LIGHTMAP_FILEPATH = "res/textures/lighting_maps_specular_color.png";
-const char* EMISSION1_MAP_FILEPATH = "res/textures/matrix.jpg";
+const char *TEXTURE1_IMAGE_FILEPATH = "res/textures/awesomeface.png";
+const char *TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
+const char *TEXTURE3_IMAGE_FILEPATH = "res/textures/container2.png";
+const char *SPECULAR1_LIGHTMAP_FILEPATH = "res/textures/container2_specular.png";
+const char *SPECULAR2_LIGHTMAP_FILEPATH = "res/textures/lighting_maps_specular_color.png";
+const char *EMISSION1_MAP_FILEPATH = "res/textures/matrix.jpg";
 
-struct camera_view {
+struct camera_view
+{
     float camera_radius;
     float camera_angle;
 };
@@ -70,7 +70,7 @@ float shinining = 64.0f;
 bool shiningFlip = false;
 
 // Camera
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);   // 光源在世界坐标中的位置
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f); // 光源在世界坐标中的位置
 float ambientStrength = 0.1f;
 
 int main()
@@ -89,8 +89,8 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* mainWindow;
-    GLFWwindow* imguiWindow;
+    GLFWwindow *mainWindow;
+    GLFWwindow *imguiWindow;
 
     mainWindow = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (mainWindow == NULL)
@@ -101,7 +101,8 @@ int main()
     }
 
     imguiWindow = glfwCreateWindow(SCR_WIDTH / 2, SCR_HEIGHT / 2, "Setting", NULL, NULL);
-    if (imguiWindow == NULL) {
+    if (imguiWindow == NULL)
+    {
         std::cout << "Failed to create GLFW Setting" << std::endl;
         glfwTerminate();
         return -1;
@@ -111,6 +112,8 @@ int main()
     glfwSetFramebufferSizeCallback(mainWindow, framebuffer_size_callback);
     glfwSetCursorPosCallback(mainWindow, mouse_callback);
     glfwSetScrollCallback(mainWindow, scroll_callback);
+
+    glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -129,63 +132,61 @@ int main()
 
     // 给出了一个立方体的所有的顶点 每一个面具有两个三角形，一个有六个顶点，顶点当中有重复
     float vertices[] = {
-    // position            // texture coord  // 法线向量
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //4
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //9
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //14
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //19
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //24
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //29
+        // position            // texture coord  // 法线向量
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 4
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,  // 9
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,   // 14
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,   // 19
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,  // 24
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 29
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 34
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 39
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 44
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 49
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 54
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 59
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 34
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,  // 39
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // 44
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // 49
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  // 54
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 59
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 64
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,  // 69
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,  // 74
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f, // 79
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 84
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 89
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,   // 64
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,  // 69
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 74
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 79
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,  // 84
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,   // 89
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 94
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 99
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 104
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 109
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 114
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 119
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // 94
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  // 99
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 104
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 109
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // 114
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // 119
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 124
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 129
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 134
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 139
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 144
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 149
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 124
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,  // 129
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,   // 134
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,   // 139
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,  // 144
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 149
 
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f
-    };
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
 
     // 定义 10 个箱子的位置， 这 10 个箱子都使用上面的立方体的模型
     glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(2.0f, 5.0f, -15.0f),
         glm::vec3(-1.5f, -2.2f, -2.5f),
         glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3( 2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3( 1.3f, -2.0f, -2.5f),
-        glm::vec3( 1.5f,  2.0f, -2.5f),
-        glm::vec3( 1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f, 3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f, 2.0f, -2.5f),
+        glm::vec3(1.5f, 0.2f, -1.5f),
+        glm::vec3(-1.3f, 1.0f, -1.5f)};
 
     unsigned int VBO, cubeVAO;
     glGenVertexArrays(1, &cubeVAO);
@@ -195,11 +196,11 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(cubeVAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     unsigned int lightCubeVAO;
@@ -208,11 +209,11 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     // ImGui 的初始化过程
@@ -220,7 +221,8 @@ int main()
     // ImGui
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
     ImGui_ImplGlfw_InitForOpenGL(imguiWindow, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 #endif
@@ -244,7 +246,7 @@ int main()
     // 例如木板对于镜面光照的强度不高，但是金属对于镜面广告的强度要比木板高很多
     lightingShader.setInt("material.specular", 1);
     // 有一些物体的发光不受到其他光照的影响
-    //lightingShader.setInt("material.emission", 2);
+    // lightingShader.setInt("material.emission", 2);
 
     while (!glfwWindowShouldClose(mainWindow) && !glfwWindowShouldClose(imguiWindow))
     {
@@ -252,9 +254,9 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 #ifdef __GL_DEEP_TEST__
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-#else /* __GL_DEEP_TEST__ */
+#else  /* __GL_DEEP_TEST__ */
         glClear(GL_COLOR_BUFFER_BIT);
-#endif  /* __GL_DEEP_TEST__ */
+#endif /* __GL_DEEP_TEST__ */
 
 #ifdef __USING_IMGUI__
         ImGui_ImplOpenGL3_NewFrame();
@@ -292,8 +294,8 @@ int main()
         glBindTexture(GL_TEXTURE_2D, specularMap);
 
         // 这里不再使用自发光挑图
-        //glActiveTexture(GL_TEXTURE2);
-        //glBindTexture(GL_TEXTURE_2D, emissionMap);
+        // glActiveTexture(GL_TEXTURE2);
+        // glBindTexture(GL_TEXTURE_2D, emissionMap);
 
         glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
         glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
@@ -305,9 +307,9 @@ int main()
         lightingShader.setVec3("light.diffuse", diffuseColor);
         // 镜面光照我们希望最强，所以设置为 1.0f, 已最大的程度来反射光线
         lightingShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-        lightingShader.setVec3("light.position",lightPos);
-        lightingShader.setFloat("light.constant", attenuation_100.constants);    // 衰减的线性常熟
-        lightingShader.setFloat("light.linear", attenuation_100.linear);     // 一次常数
+        lightingShader.setVec3("light.position", lightPos);
+        lightingShader.setFloat("light.constant", attenuation_100.constants);  // 衰减的线性常熟
+        lightingShader.setFloat("light.linear", attenuation_100.linear);       // 一次常数
         lightingShader.setFloat("light.quadratic", attenuation_100.quadratic); // 二次常数
 
         // 镜面反光的属性值，这个值越大，反射光越强越越集中
@@ -319,7 +321,6 @@ int main()
         lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f))); // 这里送入的是 \cos(\Phi) 而不直接送入角度
         lightingShader.setVec3("viewPos", camera.mPosition);
 
-
         // 世界矩阵 + view 矩阵 + 投影矩阵
         glm::mat4 projection = glm::perspective(glm::radians(camera.mZoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -328,9 +329,10 @@ int main()
         lightingShader.setVec3("viewPos", camera.mPosition);
 
         // world transformation
-        glBindVertexArray(cubeVAO);         // 只需要绑定一次即可
+        glBindVertexArray(cubeVAO); // 只需要绑定一次即可
         glm::mat4 model = glm::mat4(1.0f);
-        for (int idx = 0; idx < sizeof(cubePositions) / sizeof(glm::vec3); ++ idx) {
+        for (int idx = 0; idx < sizeof(cubePositions) / sizeof(glm::vec3); ++idx)
+        {
             // 在 CPU 上计算法线矩阵
             float rotateAngle = 20.0f * idx;
             model = glm::mat4(1.0f);
@@ -345,18 +347,17 @@ int main()
         }
 
         // 由于光是从摄像头的方向发射出去，所以这里不再绘制光源
-        //lightCubeShader.use();
-        //lightCubeShader.setMatrix4f("projection", projection);
-        //lightCubeShader.setMatrix4f("view", view);
-        //lightCubeShader.setVec3("lightCubeColor", lightColor);
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, lightPos);
-        //model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-        //lightCubeShader.setMatrix4f("model", model);
+        // lightCubeShader.use();
+        // lightCubeShader.setMatrix4f("projection", projection);
+        // lightCubeShader.setMatrix4f("view", view);
+        // lightCubeShader.setVec3("lightCubeColor", lightColor);
+        // model = glm::mat4(1.0f);
+        // model = glm::translate(model, lightPos);
+        // model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+        // lightCubeShader.setMatrix4f("model", model);
 
-
-        //glBindVertexArray(lightCubeVAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        // glBindVertexArray(lightCubeVAO);
+        // glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glBindVertexArray(0);
 
@@ -384,39 +385,46 @@ void processInput(GLFWwindow *window)
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { // W 拉近物体
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    { // W 拉近物体
         camera.ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) { // A 向左
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    { // A 向左
         camera.ProcessKeyboard(Camera_Movement::LEFT, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) { // S 拉远物体
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    { // S 拉远物体
         camera.ProcessKeyboard(Camera_Movement::BACKWARD, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) { // D 拉远物体
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    { // D 拉远物体
         camera.ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {    // 上键 向上移动物体
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    { // 上键 向上移动物体
         camera.ProcessKeyboard(Camera_Movement::UP, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {  // 下键  向下移动物体
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    { // 下键  向下移动物体
         camera.ProcessKeyboard(Camera_Movement::DOWN, deltaTime);
     }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
+    // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 {
     // 窗口失去焦点，不再响应鼠标的事件 该函数在窗口模式下有效
-    if (glfwGetWindowAttrib(window, GLFW_FOCUSED) == false) return;
+    if (glfwGetWindowAttrib(window, GLFW_FOCUSED) == false)
+        return;
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -435,29 +443,35 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
     // 如果窗口失去了焦点，不再响应鼠标的事件
-    if (glfwGetWindowAttrib(window, GLFW_FOCUSED) == false) return;
+    if (glfwGetWindowAttrib(window, GLFW_FOCUSED) == false)
+        return;
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
-unsigned int loadTexture(const char* path) {
+unsigned int loadTexture(const char *path)
+{
     unsigned int textureID;
     glGenTextures(1, &textureID);
 
     int width, height, nrComponent;
-    unsigned char* data = stbi_load(path, &width, &height, &nrComponent, 0);
+    unsigned char *data = stbi_load(path, &width, &height, &nrComponent, 0);
 
-    if (data) {
+    if (data)
+    {
         GLenum format;
-        if (nrComponent == 1) {
+        if (nrComponent == 1)
+        {
             format = GL_RED;
         }
-        else if (nrComponent == 3) {
+        else if (nrComponent == 3)
+        {
             format = GL_RGB;
         }
-        else if (nrComponent == 4) {
+        else if (nrComponent == 4)
+        {
             format = GL_RGBA;
         }
 
@@ -472,7 +486,8 @@ unsigned int loadTexture(const char* path) {
 
         stbi_image_free(data);
     }
-    else {
+    else
+    {
         std::cout << "Texture failed to load at path: " << path << std::endl;
         stbi_image_free(data);
     }
@@ -480,21 +495,22 @@ unsigned int loadTexture(const char* path) {
     return textureID;
 }
 
-void togger_button(const char* str_id, bool* v)
+void togger_button(const char *str_id, bool *v)
 {
-    ImVec4* colors = ImGui::GetStyle().Colors;
+    ImVec4 *colors = ImGui::GetStyle().Colors;
     ImVec2 p = ImGui::GetCursorScreenPos();
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
     float height = ImGui::GetFrameHeight();
     float width = height * 1.55f;
     float radius = height * 0.50f;
 
     ImGui::InvisibleButton(str_id, ImVec2(width, height));
-    if (ImGui::IsItemClicked()) *v = !*v;
-    ImGuiContext& gg = *GImGui;
+    if (ImGui::IsItemClicked())
+        *v = !*v;
+    ImGuiContext &gg = *GImGui;
     float ANIM_SPEED = 0.085f;
-    if (gg.LastActiveId == gg.CurrentWindow->GetID(str_id))// && g.LastActiveIdTimer < ANIM_SPEED)
+    if (gg.LastActiveId == gg.CurrentWindow->GetID(str_id)) // && g.LastActiveIdTimer < ANIM_SPEED)
         float t_anim = ImSaturate(gg.LastActiveIdTimer / ANIM_SPEED);
     if (ImGui::IsItemHovered())
         draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), ImGui::GetColorU32(*v ? colors[ImGuiCol_ButtonActive] : ImVec4(0.78f, 0.78f, 0.78f, 1.0f)), height * 0.5f);

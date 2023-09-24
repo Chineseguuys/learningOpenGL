@@ -23,25 +23,25 @@
 #include "Camera.h"
 #include "Material.h"
 
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 800;
 
-const char* COLOR_VERTEX_SHADER_FILEPATH = "res/glsl/material.vs";
-const char* COLOR_FRAGMENT_SHADER_FILEPATH = "res/glsl/material.fs";
-const char* LIGHT_VERTEX_SHADER_FILEPATH = "res/glsl/light_cube.vs";
-const char* LIGHT_FRAGMENT_SHADER_FILEPATH = "res/glsl/light_cube.fs";
+const char *COLOR_VERTEX_SHADER_FILEPATH = "res/glsl/material.vs";
+const char *COLOR_FRAGMENT_SHADER_FILEPATH = "res/glsl/material.fs";
+const char *LIGHT_VERTEX_SHADER_FILEPATH = "res/glsl/light_cube.vs";
+const char *LIGHT_FRAGMENT_SHADER_FILEPATH = "res/glsl/light_cube.fs";
 
-const char* TEXTURE1_IMAGE_FILEPATH = "res/textures/awesomeface.png";
-const char* TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
+const char *TEXTURE1_IMAGE_FILEPATH = "res/textures/awesomeface.png";
+const char *TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
 
-struct camera_view {
+struct camera_view
+{
     float camera_radius;
     float camera_angle;
 };
@@ -61,9 +61,8 @@ float lastY = SCR_HEIGHT / 2.0;
 // Imgui
 int materialSelected = 1;
 
-
 // Camera
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);   // 光源在世界坐标中的位置
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f); // 光源在世界坐标中的位置
 float ambientStrength = 0.1f;
 
 int main()
@@ -82,8 +81,8 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* mainWindow;
-    GLFWwindow* imguiWindow;
+    GLFWwindow *mainWindow;
+    GLFWwindow *imguiWindow;
 
     mainWindow = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (mainWindow == NULL)
@@ -94,7 +93,8 @@ int main()
     }
 
     imguiWindow = glfwCreateWindow(SCR_WIDTH / 2, SCR_HEIGHT / 2, "Setting", NULL, NULL);
-    if (imguiWindow == NULL) {
+    if (imguiWindow == NULL)
+    {
         std::cout << "Failed to create GLFW Setting" << std::endl;
         glfwTerminate();
         return -1;
@@ -122,49 +122,48 @@ int main()
 
     // 给出了一个立方体的所有的顶点 每一个面具有两个三角形，一个有六个顶点，顶点当中有重复
     float vertices[] = {
-    // position            // texture coord  // 法线向量
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //4
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //9
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //14
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //19
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, -1.0f,  //24
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,  //29
+        // position            // texture coord  // 法线向量
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 4
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,  // 9
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,   // 14
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,   // 19
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,  // 24
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, // 29
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 34
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 39
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 44
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 49
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 54
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  // 59
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 34
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,  // 39
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // 44
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,   // 49
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  // 54
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // 59
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 64
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,  // 69
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,  // 74
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f, // 79
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 84
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,  // 89
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,   // 64
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,  // 69
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 74
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, // 79
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,  // 84
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,   // 89
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 94
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 99
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 104
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // 109
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 114
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  // 119
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // 94
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  // 99
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 104
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, // 109
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // 114
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // 119
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 124
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 129
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 134
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 139
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,  // 144
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,  // 149
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 124
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,  // 129
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,   // 134
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,   // 139
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,  // 144
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, // 149
 
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f
-    };
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
 
     unsigned int VBO, cubeVAO;
     glGenVertexArrays(1, &cubeVAO);
@@ -174,11 +173,11 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(cubeVAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     unsigned int lightCubeVAO;
@@ -187,11 +186,11 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     // ImGui 的初始化过程
@@ -199,7 +198,8 @@ int main()
     // ImGui
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
     ImGui_ImplGlfw_InitForOpenGL(imguiWindow, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 #endif
@@ -210,15 +210,17 @@ int main()
     lightColor.y = 1.0f;
     lightColor.z = 1.0f;
 
+    glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     while (!glfwWindowShouldClose(mainWindow) && !glfwWindowShouldClose(imguiWindow))
     {
         glfwMakeContextCurrent(imguiWindow);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 #ifdef __GL_DEEP_TEST__
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-#else /* __GL_DEEP_TEST__ */
+#else  /* __GL_DEEP_TEST__ */
         glClear(GL_COLOR_BUFFER_BIT);
-#endif  /* __GL_DEEP_TEST__ */
+#endif /* __GL_DEEP_TEST__ */
 
 #ifdef __USING_IMGUI__
         ImGui_ImplOpenGL3_NewFrame();
@@ -262,57 +264,58 @@ int main()
         lightingShader.setVec3("light.diffuse", diffuseColor);
         // 镜面光照我们希望最强，所以设置为 1.0f, 已最大的程度来反射光线
         lightingShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-        lightingShader.setVec3("light.position",lightPos);
+        lightingShader.setVec3("light.position", lightPos);
 
-        switch(materialSelected) {
-            case 0:
-                // material 的属性
-                lightingShader.setVec3("material.ambient", emerald.ambient);
-                lightingShader.setVec3("material.diffuse", emerald.diffuse);
-                lightingShader.setVec3("material.specular", emerald.specular);
-                lightingShader.setFloat("material.shininess", emerald.shininess);
-                break;
-            case 1:
-                // material 的属性
-                lightingShader.setVec3("material.ambient", jade.ambient);
-                lightingShader.setVec3("material.diffuse", jade.diffuse);
-                lightingShader.setVec3("material.specular", jade.specular);
-                lightingShader.setFloat("material.shininess", jade.shininess);
-                break;
-            case 2:
-                // material 的属性
-                lightingShader.setVec3("material.ambient", obsidian.ambient);
-                lightingShader.setVec3("material.diffuse", obsidian.diffuse);
-                lightingShader.setVec3("material.specular", obsidian.specular);
-                lightingShader.setFloat("material.shininess", obsidian.shininess);
-                break;
-            case 3:
-                // material 的属性
-                lightingShader.setVec3("material.ambient", pearl.ambient);
-                lightingShader.setVec3("material.diffuse", pearl.diffuse);
-                lightingShader.setVec3("material.specular", pearl.specular);
-                lightingShader.setFloat("material.shininess", pearl.shininess);
-                break;
-            case 4:
-                // material 的属性
-                lightingShader.setVec3("material.ambient", rupy.ambient);
-                lightingShader.setVec3("material.diffuse", rupy.diffuse);
-                lightingShader.setVec3("material.specular", rupy.specular);
-                lightingShader.setFloat("material.shininess", rupy.shininess);
-                break;
-            case 5:
-                // material 的属性
-                lightingShader.setVec3("material.ambient", gold.ambient);
-                lightingShader.setVec3("material.diffuse", gold.diffuse);
-                lightingShader.setVec3("material.specular", gold.specular);
-                lightingShader.setFloat("material.shininess", gold.shininess);
-                break;
-            default:
-                // material 的属性
-                lightingShader.setVec3("material.ambient", emerald.ambient);
-                lightingShader.setVec3("material.diffuse", emerald.diffuse);
-                lightingShader.setVec3("material.specular", emerald.specular);
-                lightingShader.setFloat("material.shininess", emerald.shininess);
+        switch (materialSelected)
+        {
+        case 0:
+            // material 的属性
+            lightingShader.setVec3("material.ambient", emerald.ambient);
+            lightingShader.setVec3("material.diffuse", emerald.diffuse);
+            lightingShader.setVec3("material.specular", emerald.specular);
+            lightingShader.setFloat("material.shininess", emerald.shininess);
+            break;
+        case 1:
+            // material 的属性
+            lightingShader.setVec3("material.ambient", jade.ambient);
+            lightingShader.setVec3("material.diffuse", jade.diffuse);
+            lightingShader.setVec3("material.specular", jade.specular);
+            lightingShader.setFloat("material.shininess", jade.shininess);
+            break;
+        case 2:
+            // material 的属性
+            lightingShader.setVec3("material.ambient", obsidian.ambient);
+            lightingShader.setVec3("material.diffuse", obsidian.diffuse);
+            lightingShader.setVec3("material.specular", obsidian.specular);
+            lightingShader.setFloat("material.shininess", obsidian.shininess);
+            break;
+        case 3:
+            // material 的属性
+            lightingShader.setVec3("material.ambient", pearl.ambient);
+            lightingShader.setVec3("material.diffuse", pearl.diffuse);
+            lightingShader.setVec3("material.specular", pearl.specular);
+            lightingShader.setFloat("material.shininess", pearl.shininess);
+            break;
+        case 4:
+            // material 的属性
+            lightingShader.setVec3("material.ambient", rupy.ambient);
+            lightingShader.setVec3("material.diffuse", rupy.diffuse);
+            lightingShader.setVec3("material.specular", rupy.specular);
+            lightingShader.setFloat("material.shininess", rupy.shininess);
+            break;
+        case 5:
+            // material 的属性
+            lightingShader.setVec3("material.ambient", gold.ambient);
+            lightingShader.setVec3("material.diffuse", gold.diffuse);
+            lightingShader.setVec3("material.specular", gold.specular);
+            lightingShader.setFloat("material.shininess", gold.shininess);
+            break;
+        default:
+            // material 的属性
+            lightingShader.setVec3("material.ambient", emerald.ambient);
+            lightingShader.setVec3("material.diffuse", emerald.diffuse);
+            lightingShader.setVec3("material.specular", emerald.specular);
+            lightingShader.setFloat("material.shininess", emerald.shininess);
         }
 
         // 世界矩阵 + view 矩阵 + 投影矩阵
@@ -340,7 +343,6 @@ int main()
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
         lightCubeShader.setMatrix4f("model", model);
-
 
         glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -371,39 +373,46 @@ void processInput(GLFWwindow *window)
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { // W 拉近物体
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    { // W 拉近物体
         camera.ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) { // A 向左
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    { // A 向左
         camera.ProcessKeyboard(Camera_Movement::LEFT, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) { // S 拉远物体
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    { // S 拉远物体
         camera.ProcessKeyboard(Camera_Movement::BACKWARD, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) { // D 拉远物体
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    { // D 拉远物体
         camera.ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {    // 上键 向上移动物体
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    { // 上键 向上移动物体
         camera.ProcessKeyboard(Camera_Movement::UP, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {  // 下键  向下移动物体
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    { // 下键  向下移动物体
         camera.ProcessKeyboard(Camera_Movement::DOWN, deltaTime);
     }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
+    // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 {
     // 窗口失去焦点，不再响应鼠标的事件 该函数在窗口模式下有效
-    if (glfwGetWindowAttrib(window, GLFW_FOCUSED) == false) return;
+    if (glfwGetWindowAttrib(window, GLFW_FOCUSED) == false)
+        return;
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -422,9 +431,10 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
     // 如果窗口失去了焦点，不再响应鼠标的事件
-    if (glfwGetWindowAttrib(window, GLFW_FOCUSED) == false) return;
+    if (glfwGetWindowAttrib(window, GLFW_FOCUSED) == false)
+        return;
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
