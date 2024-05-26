@@ -2,7 +2,6 @@
 #define __GL_DEEP_TEST__
 
 #define LIGHT_LOOPER
-#define DISABLE_CURSOR
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -100,7 +99,9 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+#ifdef ENABLE_MOUSE_CURSOR
     glfwSetCursorPosCallback(window, mouse_callback);
+#endif
     glfwSetScrollCallback(window, scroll_callback);
 
     // glad: load all OpenGL function pointers
@@ -210,8 +211,9 @@ int main()
     {
         // input
         // -----
+#ifdef ENABLE_KEYBOARD_INPUT
         processInput(window);
-
+#endif /* ENABLE_KEYBOARD_INPUT */
         // render
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

@@ -5,11 +5,15 @@ project(light)
 # some variables 如果使用 llvm 的链接器，需要加上下面的 flags
 #set (LINK_FLAGS "-lc++ -lc++abi -fuse-ld=lld")
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set (CMAKE_C_COMPILER "clang")
-set (CMAKE_CXX_COMPILER "clang++")
+#set (CMAKE_C_COMPILER "clang")
+#set (CMAKE_CXX_COMPILER "clang++")
 set (CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_BUILD_TYPE "Debug")
 #set (CMAKE_BUILD_TYPE "Release")
+
+#add_compile_options(-DDISABLE_CURSOR)
+add_compile_options(-DENABLE_KEYBOARD_INPUT)
+#add_compile_options(-DENABLE_MOUSE_CURSOR)
 
 # 要完全使用 clang 编译器，就需要链接 libc++ 以及 libc++abi。以及使用链接器 lld 如果使用 gcc就不需要这些选项
 set (CMAKE_SHARED_LINKER_FLAGS "${LINK_FLAGS}")
@@ -58,8 +62,8 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    GLEW 
-    glfw3
+    #GLEW
+    glfw
     glad
     GL 
     X11

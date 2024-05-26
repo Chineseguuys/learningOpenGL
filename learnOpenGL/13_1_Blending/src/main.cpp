@@ -12,6 +12,8 @@
 
 #include "iostream"
 
+#include "spdlog/spdlog.h"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
@@ -48,7 +50,8 @@ int main(int argc, char *argv[])
     GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
     if (window == nullptr)
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        //std::cout << "Failed to create GLFW window" << std::endl;
+        spdlog::critical("{}: Failed to create GLFW window", __FUNCTION__ );
         glfwTerminate();
         return -1;
     }
@@ -64,7 +67,8 @@ int main(int argc, char *argv[])
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        //std::cout << "Failed to initialize GLAD" << std::endl;
+        spdlog::critical("{}: Failed to initialize GLAD", __FUNCTION__ );
         return -1;
     }
 
@@ -169,7 +173,8 @@ int main(int argc, char *argv[])
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void *)(3 * sizeof(float)));
     glBindVertexArray(0);
 
     // transparent VAO
@@ -182,7 +187,8 @@ int main(int argc, char *argv[])
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void *)(3 * sizeof(float)));
     glBindVertexArray(0);
 
     unsigned int cubeTexture = loadTexture("../resources/textures/marble.jpg");
@@ -200,7 +206,8 @@ int main(int argc, char *argv[])
 
     int textureBindID = 0;
     shader.use();
-    shader.setInt("texture1", textureBindID);
+    // ?
+    // shader.setInt("texture1", textureBindID);
 
     // 渲染
     while (!glfwWindowShouldClose(window))
@@ -257,7 +264,11 @@ int main(int argc, char *argv[])
         glBindVertexArray(transparentVAO);
         glBindTexture(GL_TEXTURE_2D + textureBindID, grassTexture);
         // 先绘制远距离的，后绘制近距离的
+#if 0
+        for (std::map<float, glm::vec3>::iterator  it = sorted.begin(); it != sorted.end(); ++it)
+#else
         for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
+#endif
         {
             model = glm::mat4(1.0f);
             model = glm::translate(model, it->second);
@@ -363,7 +374,7 @@ unsigned int loadTexture(char const *path)
             format = GL_RGB;
         else if (nrComponents == 4)
             format = GL_RGBA;
-        std::cout << "nrComponents is " << nrComponents << std::endl;
+        spdlog::info("{}: nrComponents is {}, format is 0x{:o}", __FUNCTION__ , nrComponents, format);
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -389,7 +400,7 @@ unsigned int loadTexture(char const *path)
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        spdlog::critical("{}: Texture failed to load at path: {}", __FUNCTION__ ,path);
         stbi_image_free(data);
     }
 

@@ -5,6 +5,7 @@
 #include <math.h>
 #include "Shader.h"
 #include "stbi_images.h"
+#include <spdlog/spdlog.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -94,7 +95,7 @@ int main()
     // 创建 Texture
     unsigned int texture;
     glGenTextures(1, &texture);
-    std::cout << "texture id : " << texture << std::endl;
+    spdlog::info("texture id {}", texture);
     // 一定要先 bind 之后，设置的属性才可以生效
     glBindTexture(GL_TEXTURE_2D, texture);
     // Set our texture parameters
@@ -127,7 +128,8 @@ int main()
          * 最后一个参数是真正的图像数据
          */
 
-        printf("image size is [%d, %d, %d]\n", width, height, nrChannels);
+        //printf("image size is [%d, %d, %d]\n", width, height, nrChannels);
+        spdlog::info("image size is [{}, {}, {}]", width, height, nrChannels);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
         /**
          * @brief 这会为当前绑定的纹理自动生成所有需要的多级渐远纹理。因为上面的一个函数相应的值为 0， 所以这里不会自动生成多级渐远的纹理

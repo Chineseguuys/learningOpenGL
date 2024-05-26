@@ -11,6 +11,7 @@
 #include "model.h"
 
 #include "iostream"
+#include "spdlog/spdlog.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -167,7 +168,8 @@ int main(int argc, char *argv[])
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void *)(3 * sizeof(float)));
     glBindVertexArray(0);
 
     // plane VAO
@@ -180,7 +182,8 @@ int main(int argc, char *argv[])
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void *)(3 * sizeof(float)));
     glBindVertexArray(0);
 
     // screen quad VAO
@@ -193,7 +196,8 @@ int main(int argc, char *argv[])
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)(2 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                          (void *)(2 * sizeof(float)));
     glBindVertexArray(0);
 
     unsigned int cubeTexture = loadTexture("../resources/textures/marble.jpg");
@@ -208,26 +212,32 @@ int main(int argc, char *argv[])
 
     unsigned int framebuffer;
     glGenFramebuffers(1, &framebuffer);
+    spdlog::debug("{}: generate frame buffer with id = {}", __FUNCTION__ ,framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     unsigned int textureColorBuffer;
     glGenTextures(1, &textureColorBuffer);
     glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0,
+                 GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           textureColorBuffer, 0);
 
     unsigned int rbo;
     glGenRenderbuffers(1, &rbo);
+    spdlog::debug("{}: generate render buffer with id = {}", __FUNCTION__ ,rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                              GL_RENDERBUFFER, rbo);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
-        std::cout << "ERROR:FRAMEBUFFER:: FrameBuffer is not Comlete!" << std::endl;
+        spdlog::critical("{}: ERROR:FRAMEBUFFER:: FrameBuffer is not Complete", __FUNCTION__ );
     }
 
+    //解绑帧缓冲
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     // 渲染
     while (!glfwWindowShouldClose(window))
@@ -242,6 +252,7 @@ int main(int argc, char *argv[])
         // -----
         processInput(window);
 
+        // 下面的一段程序现在帧缓冲中做渲染，之后将缓冲区中的画面绘制到桌面中
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
         glEnable(GL_DEPTH_TEST);
 
@@ -275,7 +286,7 @@ int main(int argc, char *argv[])
         shader.setMat4("model", glm::mat4(1.0f));
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
-
+        // 解绑
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDisable(GL_DEPTH_TEST);
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -284,6 +295,9 @@ int main(int argc, char *argv[])
         screenShader.use();
         glBindVertexArray(quadVAO);
         glBindTexture(GL_TEXTURE_2D + textureBindID, textureColorBuffer);
+        // 我们在上面的 framebuffer 缓冲区中渲染了一个包含了两个立方体和一个平面，下面将这个缓冲区绘制到
+        // 我们的主缓冲区，送屏幕显示
+        // 所以这里我们只需要绘制一个矩形，将 framebuffer 中渲染的数据绘制到屏幕上。
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -379,15 +393,26 @@ unsigned int loadTexture(char const *path)
     if (data)
     {
         GLenum format;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-        std::cout << "nrComponents is " << nrComponents << std::endl;
+        switch (nrComponents) {
+            case 1:
+                format = GL_RED;
+                break;
+            case 3:
+                format = GL_RGB;
+                break;
+            case 4:
+                format = GL_RGBA;
+                break;
+            default:
+                format = GL_RGBA;
+        }
+
+        spdlog::debug("{}: nrComponents is {}, format is 0x{:o}", __FUNCTION__ ,nrComponents, format);
         glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, format,
+                     width, height, 0,
+                     format, GL_UNSIGNED_BYTE,
+                     data);
         glGenerateMipmap(GL_TEXTURE_2D);
         if (format == GL_RGBA)
         {
@@ -411,7 +436,7 @@ unsigned int loadTexture(char const *path)
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        spdlog::critical("{}: Texture failed to load at path: {}", __FUNCTION__ , path);
         stbi_image_free(data);
     }
 

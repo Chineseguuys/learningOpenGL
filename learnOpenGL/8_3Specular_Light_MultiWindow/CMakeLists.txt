@@ -5,8 +5,8 @@ project(light)
 # some variables 如果使用 llvm 的链接器，需要加上下面的 flags
 #set (LINK_FLAGS "-lc++ -lc++abi -fuse-ld=lld")
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set (CMAKE_C_COMPILER "clang")
-set (CMAKE_CXX_COMPILER "clang++")
+#set (CMAKE_C_COMPILER "clang")
+#set (CMAKE_CXX_COMPILER "clang++")
 set (CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_BUILD_TYPE "Debug")
 #set (CMAKE_BUILD_TYPE "Release")
@@ -58,9 +58,9 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    GLEW 
-    glfw3
-    glad
+    #GLEW
+    glfw # does libglfw.so instand of libglfw3.so under my manjaro
+    glad # install under /user/local/lib, need LD_LIBRARY_PATH include it
     GL 
     X11
     pthread

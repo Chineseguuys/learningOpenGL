@@ -1,6 +1,0 @@
-/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/11_AssimpModel/cmake-build-debug-default/CMakeFiles/stb_image.dir
-/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/11_AssimpModel/cmake-build-debug-default/CMakeFiles/camera.dir
-/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/11_AssimpModel/cmake-build-debug-default/CMakeFiles/mesh.dir
-/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/11_AssimpModel/cmake-build-debug-default/CMakeFiles/assimp_model.dir
-/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/11_AssimpModel/cmake-build-debug-default/CMakeFiles/edit_cache.dir
-/home/yanjianghan/westdesk_1/code/opengl/learnOpenGL/11_AssimpModel/cmake-build-debug-default/CMakeFiles/rebuild_cache.dir

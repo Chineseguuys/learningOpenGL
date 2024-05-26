@@ -36,7 +36,8 @@ const char *TEXTURE2_IMAGE_FILEPATH = "res/textures/container.jpg";
 struct camera_view
 {
     float camera_radius;
-    float camera_angle;
+    float camera_angle_theta;
+    float camera_angle_alpha;
 };
 
 int main()
@@ -326,7 +327,8 @@ int main()
     float fov_angle = 45.0f;
     camera_view cameraV{
         .camera_radius = 5.0f,
-        .camera_angle = 15.0f,
+        .camera_angle_theta = 0.0f,
+        .camera_angle_alpha = 15.0f
     };
 
     while (!glfwWindowShouldClose(window))
@@ -358,7 +360,8 @@ int main()
             ImGui::SliderFloat("texture coord", &texture_coord, 0.0f, 4.0f);
             ImGui::SliderFloat("fov", &fov_angle, 0.0f, 180.0f);
             ImGui::SliderFloat("camera radius", &cameraV.camera_radius, 0.0f, 10.0f);
-            ImGui::SliderFloat("camera angle", &cameraV.camera_angle, 0.0f, 30.0f);
+            ImGui::SliderFloat("camera alpha angle", &cameraV.camera_angle_alpha, 0.0f, 30.0f);
+            ImGui::SliderFloat("camera theta angle", &cameraV.camera_angle_theta, 0.0f, 30.0f);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();
@@ -374,11 +377,12 @@ int main()
                                       static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT),
                                       0.1f, 100.0f);
 
-        float camX = cameraV.camera_radius * sin(cameraV.camera_angle);
-        float camZ = cameraV.camera_radius * cos(cameraV.camera_angle);
+        float camX = cameraV.camera_radius * sin(cameraV.camera_angle_alpha) * cos(cameraV.camera_angle_theta);
+        float camZ = cameraV.camera_radius * cos(cameraV.camera_angle_alpha);
+        float camY = cameraV.camera_radius * sin(cameraV.camera_angle_alpha) * sin(cameraV.camera_angle_theta);
 
         view = glm::lookAt(
-            glm::vec3(camX, 0.0f, camZ),
+            glm::vec3(camX, camY, camZ),
             glm::vec3(0.0f, 0.0f, 0.0f),
             up);
 

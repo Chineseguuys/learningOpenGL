@@ -2,6 +2,7 @@
 #define MESH_H
 
 #include "shader.h"
+#include <spdlog/spdlog.h>
 
 Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath)
 {
@@ -38,7 +39,8 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geo
             geometryCode = gShaderStream.str();
         }
     }catch (std::ifstream::failure& e) {
-        std::cout << "ERROR:SHADER::FILE_NOT_SUCCESSFULLY_READ" << e.what() << std::endl;
+        //std::cout << "ERROR:SHADER::FILE_NOT_SUCCESSFULLY_READ" << e.what() << std::endl;
+        spdlog::critical("{}: ERROR:SHADER::FILE_NOT_SUCCESSFULLY_READ, what={}", __FUNCTION__, e.what());
     }
 
     const char* vShaderCode = vertexCode.c_str();
@@ -89,13 +91,17 @@ void Shader::checkCompileErrors(GLuint shader, const std::string& type) {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-            std::cout << "ERROR:SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n" << std::endl;
+            //std::cout << "ERROR:SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n" << std::endl;
+            spdlog::critical("{}: ERROR:SHADER_COMPILATION_ERROR of type: {}", __FUNCTION__, type);
+            spdlog::critical("{}: error info log: {}", __FUNCTION__, infoLog);
         }
     } else {
         glGetProgramiv(shader, GL_LINK_STATUS, &success);
         if (!success) {
             glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-            std::cout << "ERROR:PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n" << std::endl;
+            //std::cout << "ERROR:PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n" << std::endl;
+            spdlog::critical("{}: ERROR:PROGRAM_LINKING_ERROR of type: {}", __FUNCTION__ , type);
+            spdlog::critical("{}: error info log: {}", __FUNCTION__ ,infoLog);
         }
     }
 }

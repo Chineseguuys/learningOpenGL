@@ -276,7 +276,11 @@ int main()
 
     shader.setMatrix4f("model", model);
     shader.setMatrix4f("view", view);
+#ifndef USING_ORTH
     shader.setMatrix4f("projection", projection);
+#else
+    shader.setMatrix4f("projection", orth_projection);
+#endif
 
 #ifdef __USING_IMGUI__
     // ImGui
@@ -357,7 +361,11 @@ int main()
         shader.use();
         shader.setFloat("mixParameter", mix_parameter);
         shader.setMatrix4f("model", model);
+#ifndef USING_ORTH
         shader.setMatrix4f("projection", projection);
+#else
+        shader.setMatrix4f("projection", orth_projection);
+#endif
         glBindVertexArray(VAO);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);

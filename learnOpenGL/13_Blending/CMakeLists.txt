@@ -5,11 +5,13 @@ project(blinding)
 # some variables 如果使用 llvm 的链接器，需要加上下面的 flags
 set (LINK_FLAGS "-fuse-ld=lld")
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set (CMAKE_C_COMPILER "clang-14")
-set (CMAKE_CXX_COMPILER "clang++-14")
+#set (CMAKE_C_COMPILER "clang-14")
+#set (CMAKE_CXX_COMPILER "clang++-14")
 set (CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_BUILD_TYPE "Debug")
 #set (CMAKE_BUILD_TYPE "Release")
+
+find_package(spdlog REQUIRED)
 
 # 要完全使用 clang 编译器，就需要链接 libc++ 以及 libc++abi。以及使用链接器 lld 如果使用 gcc就不需要这些选项
 set (CMAKE_SHARED_LINKER_FLAGS "${LINK_FLAGS}")
@@ -54,8 +56,8 @@ target_link_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    GLEW 
-    glfw3
+    #GLEW
+    glfw
     glad
     GL 
     X11
@@ -68,4 +70,5 @@ target_link_libraries(${PROJECT_NAME}
     stb_image
     mesh
     camera
+    spdlog::spdlog
 )

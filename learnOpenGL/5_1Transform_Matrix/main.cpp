@@ -115,7 +115,7 @@ int main()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
     glEnableVertexAttribArray(0); // for location 0
     glEnableVertexAttribArray(1); // for location 1
-    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(2); // for location 2
 
     // 创建 Texture1
     unsigned int texture1;

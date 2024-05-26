@@ -54,8 +54,8 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    GLEW 
-    glfw3
+    #GLEW
+    glfw
     glad
     GL 
     X11
