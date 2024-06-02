@@ -39,7 +39,6 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geo
             geometryCode = gShaderStream.str();
         }
     }catch (std::ifstream::failure& e) {
-        //std::cout << "ERROR:SHADER::FILE_NOT_SUCCESSFULLY_READ" << e.what() << std::endl;
         spdlog::critical("{}: ERROR:SHADER::FILE_NOT_SUCCESSFULLY_READ, what={}", __FUNCTION__, e.what());
     }
 
@@ -76,6 +75,8 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geo
     }
     glLinkProgram(this->ID);
     checkCompileErrors(ID, "PROGRAM");
+
+    spdlog::debug("link program with ID {}", this->ID);
 
     glDeleteShader(vertex);
     glDeleteShader(fragment);
@@ -154,6 +155,13 @@ void Shader::setMat3(const std::string &name, const glm::mat3 &mat) const {
 }
 void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const {
   glUniformMatrix4fv(glGetUniformLocation(this->ID,name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+Shader::~Shader() {
+    if (this->ID != 0) {
+      spdlog::debug("{}: delete program with ID {}", __FUNCTION__ , this->ID);
+      glDeleteProgram(this->ID);
+    }
 }
 
 #endif /* MESH_H */
