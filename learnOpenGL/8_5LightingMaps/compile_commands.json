@@ -1,0 +1,56 @@
+[
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Isource", "-Isource/imgui", "-Isource/imgui/backends", "-DDEBUG", "-g", "-o", "build/.objs/lighting_maps/linux/x86_64/debug/main.cpp.o", "main.cpp"],
+  "file": "main.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-DDEBUG", "-g", "-o", "build/.objs/shader/linux/x86_64/debug/source/Shader.cpp.o", "source/Shader.cpp"],
+  "file": "source/Shader.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Isource/imgui", "-DDEBUG", "-g", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/source/imgui/backends/imgui_impl_opengl3.cpp.o", "source/imgui/backends/imgui_impl_opengl3.cpp"],
+  "file": "source/imgui/backends/imgui_impl_opengl3.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Isource/imgui", "-DDEBUG", "-g", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/source/imgui/imgui_demo.cpp.o", "source/imgui/imgui_demo.cpp"],
+  "file": "source/imgui/imgui_demo.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Isource/imgui", "-DDEBUG", "-g", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/source/imgui/imgui_draw.cpp.o", "source/imgui/imgui_draw.cpp"],
+  "file": "source/imgui/imgui_draw.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Isource/imgui", "-DDEBUG", "-g", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/source/imgui/imgui_tables.cpp.o", "source/imgui/imgui_tables.cpp"],
+  "file": "source/imgui/imgui_tables.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Isource/imgui", "-DDEBUG", "-g", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/source/imgui/imgui_widgets.cpp.o", "source/imgui/imgui_widgets.cpp"],
+  "file": "source/imgui/imgui_widgets.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Isource/imgui", "-DDEBUG", "-g", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/source/imgui/imgui.cpp.o", "source/imgui/imgui.cpp"],
+  "file": "source/imgui/imgui.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Isource/imgui", "-DDEBUG", "-g", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/source/imgui/imgui_impl_glfw.cpp.o", "source/imgui/imgui_impl_glfw.cpp"],
+  "file": "source/imgui/imgui_impl_glfw.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-DDEBUG", "-g", "-o", "build/.objs/camera/linux/x86_64/debug/source/Camera.cpp.o", "source/Camera.cpp"],
+  "file": "source/Camera.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/8_5LightingMaps",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-DDEBUG", "-g", "-o", "build/.objs/stb_images/linux/x86_64/debug/source/stbi_images.cpp.o", "source/stbi_images.cpp"],
+  "file": "source/stbi_images.cpp"
+}]

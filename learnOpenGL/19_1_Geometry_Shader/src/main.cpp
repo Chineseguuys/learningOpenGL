@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
                                           nullptr,
                                           nullptr);
     if (window == nullptr) {
-        spdlog::critical("Failed to Create GLFW window");
+        spdlog::error("Failed to Create GLFW window");
         glfwTerminate();
         return  -1;
     }
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-        spdlog::critical("Failed to Initialize GLAD");
+        spdlog::error("Failed to Initialize GLAD");
         return -1;
     }
 
@@ -71,36 +71,45 @@ int main(int argc, char* argv[]) {
         0.5f, 0.5f, 0.0f
     };
 
-    float triangleVertices[] = {
-          // triangle vertices
-          -0.5f, -0.5f, 0.0f, // left
-          0.5f, -0.5f, 0.0f, // right
-          0.0f,  0.5f, 0.0f  // top
+    float points[] = {
+        // position vec2[without z]      color vec3
+        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // top-left
+        0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // top-right
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // bottom-right
+        -0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // bottom-left
     };
 
     // 编译 shader
     // 几何变换，点绘制转化为线的绘制和三角形的绘制
     Shader shader{"../res/glsl/vertex.vs",
                   "../res/glsl/fragment.vs",
-                  "../res/glsl/geomery_lines.vs"
+                  "../res/glsl/geomery.vs"
     };
-
-    // 如果不启用几何变换
-    //Shader shaderNoGeomery{"../res/glsl/vertex.vs", "../res/glsl/fragment.vs"};
 
     GLuint VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    spdlog::info("gen vertex array with id {}, gen buffer with id {}", VAO, VBO);
+    spdlog::debug("gen vertex array with id {}, gen buffer with id {}", VAO, VBO);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3,
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+    // for position
+    glVertexAttribPointer(0, 2,
                           GL_FLOAT,
                           GL_FALSE,
-                          3 * sizeof(float),
+                          5 * sizeof(float),
                           (void*)0);
-    glEnableVertexAttribArray(0);
+    // for color
+	glVertexAttribPointer(1, 3,
+						  GL_FLOAT,
+						  GL_FALSE,
+						  5 * sizeof(float),
+						  (void*)(2 * sizeof(float)));
+	// enable vertex attrib
+	// enable aPos
+	glEnableVertexAttribArray(0);
+	// enable aColor
+	glEnableVertexAttribArray(1);
 
     shader.use();
 

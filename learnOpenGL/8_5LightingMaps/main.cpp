@@ -114,7 +114,7 @@ int main()
 
     // set input mode
     // 在主界面窗口中隐藏鼠标
-    glfwSetInputMode(mainWindow, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------

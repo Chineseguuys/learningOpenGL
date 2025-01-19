@@ -56,77 +56,77 @@ int main(int argc, char* argv[]) {
     glEnable(GL_DEPTH_TEST);
 #endif /* ENABLE_DEPTH_TEST */
 
-#ifdef ENABLE_POINT_SIZE
-    // 控制默认绘制点的大小
-    glEnable(GL_PROGRAM_POINT_SIZE);
-    glPointSize(5.0f);  // 绘制点时，控制点的大小
-    glLineWidth(5.0f);  // 绘制线时，控制线的宽度
-#endif /* ENABLE_POINT_SIZE */
+    float quadVertices[] = {
+        // 位置          // 颜色
+        -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
+        0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
+        -0.05f, -0.05f,  0.0f, 0.0f, 1.0f,
 
-    float vertices[] = {
-        // four point position
-        -0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.5f, 0.5f, 0.0f
+        -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
+        0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
+        0.05f,  0.05f,  0.0f, 1.0f, 1.0f
     };
 
-    float triangleVertices[] = {
-          // triangle vertices
-          -0.5f, -0.5f, 0.0f, // left
-          0.5f, -0.5f, 0.0f, // right
-          0.0f,  0.5f, 0.0f  // top
-    };
+    glm::vec2 translations[100];
 
-    // 编译 shader
-    // 几何变换，点绘制转化为线的绘制和三角形的绘制
-    Shader shader{"../res/glsl/vertex.vs",
-                  "../res/glsl/fragment.vs",
-                  "../res/glsl/geomery_lines.vs"
-    };
+    GLuint quadVAO, quadVBO;
+    glGenVertexArrays(1, &quadVAO);
+    spdlog::info("generate vertex array object: {}", quadVAO);
+    glGenBuffers(1, &quadVBO);
+    spdlog::info("generate vertex buffer object: {}", quadVBO);
+    glBindVertexArray(quadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+    // 位置
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    // 颜色
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    // init translations;
+    int index = 0;
+    float offset = 0.1f;
+    for (int y = -10; y < 10; y += 2) {
+        for (int x = -10; x < 10; x += 2) {
+            glm::vec2 translation;
+            translation.x = (float)x / 10.0f + offset;
+            translation.y = (float)y / 10.0f + offset;
+            translations[index] = translation;
+            ++index;
+        }
+    }
 
     // 如果不启用几何变换
-    //Shader shaderNoGeomery{"../res/glsl/vertex.vs", "../res/glsl/fragment.vs"};
-
-    GLuint VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    spdlog::info("gen vertex array with id {}, gen buffer with id {}", VAO, VBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          3 * sizeof(float),
-                          (void*)0);
-    glEnableVertexAttribArray(0);
+    Shader shader{"../res/glsl/vertex.vs", "../res/glsl/fragment.vs"};
 
     shader.use();
+
+    for (uint32_t i = 0; i < 100; i++) {
+        std::stringstream ss;
+        std::string strIndex;
+        ss << i;
+        strIndex = ss.str();
+        // 使用 for 循环去为 offsets 的每一个位置设置对应的位移向量
+        shader.setVec2(("offsets[" + strIndex + "]").c_str(), translations[i]);
+    }
 
     // render loop
     while (!glfwWindowShouldClose(window)) {
         // 处理键盘的输入
         processInput(window);
-#ifdef ENABLE_DEPTH_TEST
-        // 开启了深度测试，需要设置 mask
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-#else
         glClear(GL_COLOR_BUFFER_BIT);
-#endif
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.69f, 0.77f, 0.87f, 1.0f);
 
-        shader.use();
-        glBindVertexArray(VAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawArrays(GL_POINTS, 0, 4);
-        // swap buffer and poll ui events
+        glBindVertexArray(quadVAO);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &quadVAO);
+    glDeleteBuffers(1, &quadVBO);
     glfwTerminate();
     return 0;
 }

@@ -1,0 +1,31 @@
+[
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/11_AssimpModel",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Iinclude", "-DDEBUG", "-g", "-o", "build/.objs/camera/linux/x86_64/debug/include/camera.cpp.o", "include/camera.cpp"],
+  "file": "include/camera.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/11_AssimpModel",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Iinclude", "-IthirdParty", "-DDEBUG", "-g", "-o", "build/.objs/assimp_model/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
+  "file": "src/main.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/11_AssimpModel",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Iinclude", "-IthirdParty", "-DDEBUG", "-g", "-o", "build/.objs/mesh/linux/x86_64/debug/include/shader.cpp.o", "include/shader.cpp"],
+  "file": "include/shader.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/11_AssimpModel",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Iinclude", "-IthirdParty", "-DDEBUG", "-g", "-o", "build/.objs/mesh/linux/x86_64/debug/include/mesh.cpp.o", "include/mesh.cpp"],
+  "file": "include/mesh.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/11_AssimpModel",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-Iinclude", "-IthirdParty", "-DDEBUG", "-g", "-o", "build/.objs/mesh/linux/x86_64/debug/include/model.cpp.o", "include/model.cpp"],
+  "file": "include/model.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/11_AssimpModel",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-O0", "-DDEBUG", "-g", "-o", "build/.objs/stb_images/linux/x86_64/debug/thirdParty/stbi_images.cpp.o", "thirdParty/stbi_images.cpp"],
+  "file": "thirdParty/stbi_images.cpp"
+}]

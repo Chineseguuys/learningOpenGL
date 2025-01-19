@@ -1,0 +1,43 @@
+RDOC 059477: [21:41:52]             core.cpp( 504) - Log     - RenderDoc v1.35 Linux 64-bit Release (8a394019fdb62ad82be87bfd338a5ec43f4a5d95) loaded in replay application
+RDOC 059477: [21:41:52]         settings.cpp( 471) - Log     - Loading config from /home/yanjiangha/.renderdoc/renderdoc.conf
+RDOC 059477: [21:41:52]         settings.cpp( 326) - Log     - Android.SDKDirPath has been customised from  to /home/yanjiangha/Android/Sdk
+RDOC 059477: [21:41:52]         settings.cpp( 326) - Log     - Android.JDKDirPath has been customised from  to /home/yanjiangha/Android/jdk/jdk-11.0.23
+QTRD 059477: [21:41:52]                     (   0) - Log     - QRenderDoc initialising.
+RDOC 059477: [21:41:52]             core.cpp( 626) - Log     - Replay application '/home/yanjiangha/.local_software/renderdoc/renderdoc_1.35/bin/qrenderdoc' launched
+RDOC 059477: [21:41:52]        vk_replay.cpp(5336) - Log     - Created device.
+RDOC 059477: [21:41:52]             core.cpp( 792) - Log     - GPU: AMD - AMD Radeon RX 6650 XT (RADV NAVI23) (driver: --)
+RDOC 059477: [21:41:52]    android_tools.cpp( 347) - Log     - Initialising adb using '/home/yanjiangha/Android/Sdk/platform-tools/adb'
+QTRD 059477: [21:41:52]                     (   0) - Log     - LoadLayout  0
+QTRD 059477: [21:41:52]                     (   0) - Warning - area parameter ignored for this type
+QTRD 059477: [21:41:52]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:00]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:00]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:00]                     (   0) - Warning - Case insensitive sorting unsupported in the posix collation implementation
+QTRD 059477: [21:42:00]                     (   0) - Warning - Numeric mode unsupported in the posix collation implementation
+QTRD 059477: [21:42:04]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:04]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:04]                     (   0) - Warning - Case insensitive sorting unsupported in the posix collation implementation
+QTRD 059477: [21:42:04]                     (   0) - Warning - Numeric mode unsupported in the posix collation implementation
+QTRD 059477: [21:42:06]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:06]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:06]                     (   0) - Warning - Case insensitive sorting unsupported in the posix collation implementation
+QTRD 059477: [21:42:06]                     (   0) - Warning - Numeric mode unsupported in the posix collation implementation
+QTRD 059477: [21:42:07]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:07]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:07]                     (   0) - Warning - Case insensitive sorting unsupported in the posix collation implementation
+QTRD 059477: [21:42:07]                     (   0) - Warning - Numeric mode unsupported in the posix collation implementation
+QTRD 059477: [21:42:07]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:07]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:07]                     (   0) - Warning - Case insensitive sorting unsupported in the posix collation implementation
+QTRD 059477: [21:42:07]                     (   0) - Warning - Numeric mode unsupported in the posix collation implementation
+QTRD 059477: [21:42:08]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:08]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:08]                     (   0) - Warning - Case insensitive sorting unsupported in the posix collation implementation
+QTRD 059477: [21:42:08]                     (   0) - Warning - Numeric mode unsupported in the posix collation implementation
+QTRD 059477: [21:42:09]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:09]                     (   0) - Warning - Only C and default locale supported with the posix collation implementation
+QTRD 059477: [21:42:09]                     (   0) - Warning - Case insensitive sorting unsupported in the posix collation implementation
+QTRD 059477: [21:42:09]                     (   0) - Warning - Numeric mode unsupported in the posix collation implementation
+RDOC 059477: [21:42:20]    posix_process.cpp( 981) - Log     - Running process /home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/19_Geometry_Shader/build/linux/x86_64/debug/geometry_shader for injection
+RDOC 059477: [21:42:21]    linux_process.cpp( 155) - Warning - Couldn't locate renderdoc target control listening port between 38920 and 38927 in /proc/59576/net/tcp
+RDOC 059477: [21:42:21]    posix_process.cpp(1009) - Error   - Couldn't connect to target program. Check that it didn't crash or exit during early initialisation, e.g. due to an incorrectly configured working directory.
