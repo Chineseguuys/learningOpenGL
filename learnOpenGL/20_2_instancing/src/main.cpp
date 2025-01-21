@@ -14,6 +14,7 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
+void titleFps(GLFWwindow* win);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -107,9 +108,15 @@ int main(int argc, char* argv[]) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     // 对于第二各参数，默认顶点属性只都是0, 表示每次处理一个顶点都需要更新这个值
     // 1 表示每绘制一个实例更新这个值，表示这是一个实例化数组
+    /*
+    index: 要修改的顶点属性索引（对应于 glVertexAttribPointer 中绑定的索引）。
+        divisor: 每个实例更新顶点属性的频率：
+        如果 divisor 为 0，表示该顶点属性不会在实例之间改变（默认值），每个顶点都使用同样的值。
+        如果 divisor 为 1，表示该顶点属性每个实例更新一次。
+        如果 divisor 为 N，表示该顶点属性每 N 个实例更新一次
+    */
     glVertexAttribDivisor(2, 1);
 
-    // 如果不启用几何变换
     Shader shader{"../res/glsl/vertex.vs", "../res/glsl/fragment.vs"};
 
     shader.use();
@@ -126,10 +133,14 @@ int main(int argc, char* argv[]) {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        // 在 glfw 的标题栏中显示当前渲染的帧率
+        titleFps(window);
     }
 
     glDeleteVertexArrays(1, &quadVAO);
     glDeleteBuffers(1, &quadVBO);
+    glDeleteBuffers(1, &instanceVBO);
     glfwTerminate();
     return 0;
 }
@@ -145,4 +156,23 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
   // make sure the viewport matches the new window dimensions; note that width and
   // height will be significantly larger than specified on retina displays.
   glViewport(0, 0, width, height);
+}
+
+void titleFps(GLFWwindow* win) {
+    static double time0 = glfwGetTime();
+    static double time1;
+    static double dt;
+    static int dframe = 1;
+    static std::stringstream info;
+
+    time1 = glfwGetTime();
+    dframe++;
+    if ((dt = time1 - time0) >= 1.0) {
+        info.precision(1);
+        info << "LearnOpenGL" << " " << std::fixed << dframe / dt << " FPS";
+        glfwSetWindowTitle(win, info.str().c_str());
+        info.str("");
+        time0 = time1;
+        dframe = 0;
+    }
 }
