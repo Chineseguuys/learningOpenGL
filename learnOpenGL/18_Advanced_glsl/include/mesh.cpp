@@ -1,5 +1,4 @@
 #include "mesh.h"
-#include "spdlog/spdlog.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
   this->vertices = vertices;
@@ -9,7 +8,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
   this->setupMesh();
 }
 
-void Mesh::Draw(Shader shader) {
+void Mesh::Draw(Shader& shader) {
   // 绑定合适的纹理
   unsigned int diffuseNr = 1;
   unsigned int specularNr = 1;
@@ -29,11 +28,6 @@ void Mesh::Draw(Shader shader) {
     } else if (name=="texture_height"){
       number=std::to_string(heightNr++);
     }
-    spdlog::trace("{}: for program {}, set Uniform1i for {} with textureID {}",
-                  __FUNCTION__ ,
-                  shader.ID,
-                  (name + number).c_str(),
-                  i);
     glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
     glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
   }

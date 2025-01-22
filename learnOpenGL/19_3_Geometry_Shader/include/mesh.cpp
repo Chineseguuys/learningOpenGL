@@ -1,18 +1,14 @@
 #include "mesh.h"
-#include "spdlog/spdlog.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
   this->vertices = vertices;
   this->indices = indices;
   this->textures = textures;
-  this->VAO = 0;
-  this->VBO = 0;
-  this->EBO = 0;
 
   this->setupMesh();
 }
 
-void Mesh::Draw(Shader shader) {
+void Mesh::Draw(Shader& shader) {
   // 绑定合适的纹理
   unsigned int diffuseNr = 1;
   unsigned int specularNr = 1;
@@ -32,19 +28,12 @@ void Mesh::Draw(Shader shader) {
     } else if (name=="texture_height"){
       number=std::to_string(heightNr++);
     }
-    spdlog::trace("{}: for program {}, set Uniform1i for {} with textureID {}",
-                  __FUNCTION__ ,
-                  shader.ID,
-                  (name + number).c_str(),
-                  i);
     glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
     glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
   }
 
   glBindVertexArray(this->VAO);
-  spdlog::trace("{}: draw triangles for VAO {}", __FUNCTION__ , this->VAO);
   glDrawElements(GL_TRIANGLES, static_cast<int>(this->indices.size()), GL_UNSIGNED_INT, 0);
-  // 解绑 vao
   glBindVertexArray(0);
   // 取消 texture 的绑定
   glActiveTexture(GL_TEXTURE0);

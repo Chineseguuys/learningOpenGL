@@ -8,7 +8,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
   this->setupMesh();
 }
 
-void Mesh::Draw(Shader shader) {
+void Mesh::Draw(Shader& shader) {
   // 绑定合适的纹理
   unsigned int diffuseNr = 1;
   unsigned int specularNr = 1;
