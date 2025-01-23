@@ -74,11 +74,11 @@ int main(int argc, char* argv[]) {
     Model rock("../res/models/rock/rock.obj");
     Model planet("../res/models/planet/planet.obj");
 
-    unsigned int amount = 1000;
+    unsigned int amount = 8000;
     glm::mat4* modelMatrices;
     modelMatrices = new glm::mat4[amount];
     srand(static_cast<unsigned int>(glfwGetTime()));
-    float radius = 50.0f;
+    float radius = 25.0f;
     float offset = 2.5f;
 
     for (unsigned int i = 0; i < amount; i++) {

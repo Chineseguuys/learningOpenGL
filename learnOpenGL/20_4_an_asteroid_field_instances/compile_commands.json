@@ -1,0 +1,71 @@
+[
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/stb_image/linux/x86_64/debug/thirdParty/stbi_images.cpp.o", "thirdParty/stbi_images.cpp"],
+  "file": "thirdParty/stbi_images.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-Iinclude", "-IthirdParty", "-IthirdParty/imgui", "-IthirdParty/imgui/backends", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/instancing/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
+  "file": "src/main.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-IthirdParty/imgui", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/thirdParty/imgui/backends/imgui_impl_opengl3.cpp.o", "thirdParty/imgui/backends/imgui_impl_opengl3.cpp"],
+  "file": "thirdParty/imgui/backends/imgui_impl_opengl3.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-IthirdParty/imgui", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/thirdParty/imgui/imgui_demo.cpp.o", "thirdParty/imgui/imgui_demo.cpp"],
+  "file": "thirdParty/imgui/imgui_demo.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-IthirdParty/imgui", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/thirdParty/imgui/imgui_draw.cpp.o", "thirdParty/imgui/imgui_draw.cpp"],
+  "file": "thirdParty/imgui/imgui_draw.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-IthirdParty/imgui", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/thirdParty/imgui/imgui_tables.cpp.o", "thirdParty/imgui/imgui_tables.cpp"],
+  "file": "thirdParty/imgui/imgui_tables.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-IthirdParty/imgui", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/thirdParty/imgui/imgui_widgets.cpp.o", "thirdParty/imgui/imgui_widgets.cpp"],
+  "file": "thirdParty/imgui/imgui_widgets.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-IthirdParty/imgui", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/thirdParty/imgui/imgui.cpp.o", "thirdParty/imgui/imgui.cpp"],
+  "file": "thirdParty/imgui/imgui.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-IthirdParty/imgui", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/imgui_impl_opengl3/linux/x86_64/debug/thirdParty/imgui/imgui_impl_glfw.cpp.o", "thirdParty/imgui/imgui_impl_glfw.cpp"],
+  "file": "thirdParty/imgui/imgui_impl_glfw.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-Iinclude", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/camera/linux/x86_64/debug/include/camera.cpp.o", "include/camera.cpp"],
+  "file": "include/camera.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-Iinclude", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/camera/linux/x86_64/debug/include/processInput.cpp.o", "include/processInput.cpp"],
+  "file": "include/processInput.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-Iinclude", "-IthirdParty", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/mesh/linux/x86_64/debug/include/shader.cpp.o", "include/shader.cpp"],
+  "file": "include/shader.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-Iinclude", "-IthirdParty", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/mesh/linux/x86_64/debug/include/mesh.cpp.o", "include/mesh.cpp"],
+  "file": "include/mesh.cpp"
+},
+{
+  "directory": "/home/yanjiangha/mirrors/sda1_doc/code/opengl/learnOpenGL/20_4_an_asteroid_field_instances",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-Iinclude", "-IthirdParty", "-DENABLE_DEPTH_TEST", "-o", "build/.objs/mesh/linux/x86_64/debug/include/model.cpp.o", "include/model.cpp"],
+  "file": "include/model.cpp"
+}]

@@ -24,7 +24,7 @@ enum Camera_Movement {
 
 const float YAW             = -90.0f;
 const float PITCH           = 0.0f;
-const float SPEED           = 2.5f; // 控制 camera 移动的速度
+const float SPEED           = 7.25f; // 控制 camera 移动的速度
 const float SENSITIVITY     = 0.1f;
 const float ZOOM            = 45.0f;
 
