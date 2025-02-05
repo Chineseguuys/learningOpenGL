@@ -234,7 +234,9 @@ int main(int argc, char* argv[]) {
         glBindTexture(GL_TEXTURE_2D, woodTexture);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, depthMap);
+        //glCullFace(GL_FRONT);
         renderScene(shader);
+        //glCullFace(GL_BACK);
 
         // render Depth map to quad for visual debugging
         // ---------------------------------------------
