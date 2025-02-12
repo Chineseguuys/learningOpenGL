@@ -45,13 +45,13 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
 unsigned int loadTexture(char const * path, bool gammaCorrection);
 void renderScene(const Shader &shader);
 void renderCube();
-void renderQuad();
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 900;
 
-const GLboolean shadows = GL_TRUE;
+GLboolean shadows = GL_TRUE;
+GLboolean shadowsKeyPressed = GL_FALSE;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -106,10 +106,6 @@ int main(int argc, char* argv[]) {
     Shader simpleDepthShader("../res/glsl/point_shadow_depth.vs", "../res/glsl/point_shadow_depth.fs", "../res/glsl/point_shadow_depth.gs");
     Shader lightShader("../res/glsl/light_point.vs", "../res/glsl/light_point.fs");
 
-    shader.use();
-    shader.setInt("diffuseTexture", 0);
-    shader.setInt("depthMap", 1);
-
     // Light source
     glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
@@ -142,7 +138,10 @@ int main(int argc, char* argv[]) {
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+    shader.use();
+    shader.setInt("diffuseTexture", 0);
+    shader.setInt("depthMap", 1);
+
     // render loop
     while (!glfwWindowShouldClose(window)) {
 
@@ -154,24 +153,28 @@ int main(int argc, char* argv[]) {
         // 处理键盘的输入
         processInput(window);
 
+        // render
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         GLfloat aspect = static_cast<GLfloat>(SHADOW_WIDTH) / static_cast<GLfloat>(SHADOW_HEIGHT);
         GLfloat nearPlane = 1.0f;
         GLfloat farPlane = 25.0f;
         glm::mat4 shadowProj = glm::perspective(90.0f, aspect, nearPlane, farPlane);
         std::vector<glm::mat4> shadowTransforms;
-        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0)));
-        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0)));
-        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0)));
-        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0)));
-        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0)));
+        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+        shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
         // 1. Render scene to depth cubemap
         glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
         glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
         glClear(GL_DEPTH_BUFFER_BIT);
         simpleDepthShader.use();
-        for (GLuint i = 0; i < 6; ++i) {
+        for (uint32_t i = 0; i < 6; ++i) {
             simpleDepthShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
         }
         simpleDepthShader.setFloat("far_plane", farPlane);
@@ -236,6 +239,15 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(UP, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
         camera.ProcessKeyboard(DOWN, deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !shadowsKeyPressed) {
+        shadows = !shadows;
+        spdlog::debug("shadows changed to status: {}", shadows);
+        shadowsKeyPressed = GL_TRUE;
+    }
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+        shadowsKeyPressed = GL_FALSE;
+    }
 }
 
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
@@ -338,7 +350,7 @@ void renderScene(const Shader &shader)
 {
     //Room Cube
     glm::mat4 model = glm::mat4(1.0);
-    model = glm::scale(model, glm::vec3(10.0));
+    model = glm::scale(model, glm::vec3(20.0));
     shader.setMat4("model", model);
     // 因为我们是从一个正方体的内部去渲染，所以我们先关闭面剔除功能，在绘制完房间之后，再重新打开面剔除的功能
     glDisable(GL_CULL_FACE);
@@ -369,12 +381,13 @@ void renderScene(const Shader &shader)
     shader.setMat4("model", model);
     renderCube();
 
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(-1.5f, 2.0f, -3.0f));
-    model = glm::rotate(model, 60.0f, glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
-    model = glm::scale(model, glm::vec3(1.5f));
-    shader.setMat4("model", model);
-    renderCube();
+    // Todo: has some problem
+    //model = glm::mat4(1.0f);
+    //model = glm::translate(model, glm::vec3(-1.5f, 2.0f, -3.0f));
+    //model = glm::rotate(model, 60.0f, glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+    //model = glm::scale(model, glm::vec3(0.75f));
+    //shader.setMat4("model", model);
+    //renderCube();
 }
 
 // renderCube() renders a 1x1 3D cube in NDC.
@@ -449,36 +462,5 @@ void renderCube()
     // render Cube
     glBindVertexArray(cubeVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);
-}
-
-// renderQuad() renders a 1x1 XY quad in NDC
-// -----------------------------------------
-unsigned int quadVAO = 0;
-unsigned int quadVBO;
-void renderQuad()
-{
-    if (quadVAO == 0)
-    {
-        static float quadVertices[] = {
-            // positions        // texture Coords
-            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        };
-        // setup plane VAO
-        glGenVertexArrays(1, &quadVAO);
-        glGenBuffers(1, &quadVBO);
-        glBindVertexArray(quadVAO);
-        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    }
-    glBindVertexArray(quadVAO);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
 }
