@@ -102,6 +102,10 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
+    // enable depth test
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
     Shader shader("../res/glsl/point_shader.vs", "../res/glsl/point_shader.fs");
     Shader simpleDepthShader("../res/glsl/point_shadow_depth.vs", "../res/glsl/point_shadow_depth.fs", "../res/glsl/point_shadow_depth.gs");
     Shader lightShader("../res/glsl/light_point.vs", "../res/glsl/light_point.fs");
@@ -119,6 +123,7 @@ int main(int argc, char* argv[]) {
     // Create depth cubemap texture
     GLuint depthCubemapTexture;
     glGenTextures(1, &depthCubemapTexture);
+    spdlog::debug("generate depth cube map texture with ID: {}", depthCubemapTexture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemapTexture);
     for (GLuint i = 0; i < 6; ++i) {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
@@ -381,13 +386,12 @@ void renderScene(const Shader &shader)
     shader.setMat4("model", model);
     renderCube();
 
-    // Todo: has some problem
-    //model = glm::mat4(1.0f);
-    //model = glm::translate(model, glm::vec3(-1.5f, 2.0f, -3.0f));
-    //model = glm::rotate(model, 60.0f, glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
-    //model = glm::scale(model, glm::vec3(0.75f));
-    //shader.setMat4("model", model);
-    //renderCube();
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(-1.5f, 2.0f, -3.0f));
+    model = glm::rotate(model, 60.0f, glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
+    model = glm::scale(model, glm::vec3(0.75f));
+    shader.setMat4("model", model);
+    renderCube();
 }
 
 // renderCube() renders a 1x1 3D cube in NDC.

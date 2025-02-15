@@ -1,8 +1,6 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec2 TexCoord;
-
 uniform vec2 upper_left;
 uniform vec2 width_height;
 uniform float corner_radius;

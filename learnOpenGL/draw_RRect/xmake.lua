@@ -54,36 +54,19 @@ target("mesh")
         add_packages("assimp")
     end
 
-target("imgui_impl_opengl3")
-    set_kind("static")
-    add_files("thirdParty/imgui/backends/imgui_impl_opengl3.cpp")
-    add_files("thirdParty/imgui/imgui_demo.cpp")
-    add_files("thirdParty/imgui/imgui_draw.cpp")
-    add_files("thirdParty/imgui/imgui_tables.cpp")
-    add_files("thirdParty/imgui/imgui_widgets.cpp")
-    add_files("thirdParty/imgui/imgui.cpp")
-    add_files("thirdParty/imgui/imgui_impl_glfw.cpp")
-    add_includedirs("thirdParty/imgui")
-    add_includedirs("thirdParty/glad/v_4.3/include/")
-    if is_os("windows") then
-        add_packages("glm")
-    end
-
 target("point_shadow")
     set_kind("binary")
     add_files("src/main.cpp")
     add_includedirs("include/")
     add_includedirs("thirdParty/")
-    add_includedirs("thirdParty/imgui")
-    add_includedirs("thirdParty/imgui/backends")
     add_includedirs("thirdParty/glad/v_4.3/include/")
-    add_deps("stb_image", "mesh", "camera", "imgui_impl_opengl3", "glad")
+    add_deps("stb_image", "mesh", "camera", "glad")
     if is_os("windows") then
         add_packages("glfw3")
         add_packages("fmt")
         add_links("gdi32", "shell32", "user32", "glad", "opengl32", "stb_image", "mesh", "camera", "imgui_impl_opengl3")
     elseif is_os("linux") then
-        add_links("glfw", "glad", "GL", "X11", "pthread", "Xrandr", "assimp", "stb_image", "mesh", "camera", "imgui_impl_opengl3")
+        add_links("glfw", "glad", "GL", "X11", "pthread", "Xrandr", "mesh", "camera")
     end
 
     -- 设置工作目录（支持相对路径和绝对路径
