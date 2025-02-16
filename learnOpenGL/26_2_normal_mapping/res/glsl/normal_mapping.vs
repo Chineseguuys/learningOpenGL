@@ -1,0 +1,43 @@
+#version 330 core
+layout (location = 0) in vec3 position; // 顶点位置
+layout (location = 1) in vec3 normal;   // 顶点法线
+layout (location = 2) in vec2 texCoords;    // 纹理坐标
+layout (location = 3) in vec3 tangent;      // 切线向量
+layout (location = 4) in vec3 bitangent;    // 副切线向量
+
+out VS_OUT {
+    vec3 FragPos;   // 片段的世界空间的位置
+    vec2 TexCoords; // 纹理的坐标
+    vec3 TangentLightPos;   // 光源的位置 (切线空间)
+    vec3 TangentViewPos;    // 观察位置(切线空间)
+    vec3 TangentFragPos;    // 片段的位置(切线空间)
+    mat3 TBN;
+} vs_out;
+
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 model;
+
+uniform vec3 lightPos;
+uniform vec3 viewPos;
+
+void main()
+{
+    // 计算顶点在裁切空间的位置
+    gl_Position = projection * view * model * vec4(position, 1.0f);
+    // 计算顶点在世界空间的位置
+    vs_out.FragPos = vec3(model * vec4(position, 1.0));
+    vs_out.TexCoords = texCoords;
+
+    mat3 normalMatrix = transpose(inverse(mat3(model)));
+    vec3 T = normalize(normalMatrix * tangent);
+    vec3 N = normalize(normalMatrix * normal);
+    T = normalize(T - dot(T, N) * N);
+    vec3 B = cross(N, T);
+
+    mat3 TBN = transpose(mat3(T, B, N));
+    vs_out.TBN = TBN;
+    vs_out.TangentLightPos = TBN * lightPos;
+    vs_out.TangentViewPos  = TBN * viewPos;
+    vs_out.TangentFragPos  = TBN * vs_out.FragPos;
+}
