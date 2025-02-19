@@ -9,23 +9,22 @@ in VS_OUT {
     mat3 TBN;
 } fs_in;
 
-uniform sampler2D diffuseMap;
-uniform sampler2D normalMap;
- 
+uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_normal1;
+
 void main()
 {
-    // Obtain normal from normal map in range [0,1]
-    vec3 normal = texture(normalMap, fs_in.TexCoords).rgb;
-    // Transform normal vector to range [-1,1]
+    // Obtain normal from normal map in range [0, 1]
+    vec3 normal = texture(texture_normal1, fs_in.TexCoords).rgb;
+    // transform normal vector to range [-1, 1]
     normal = normal * 2.0 - 1.0;
     normal = normalize(fs_in.TBN * normal);
 
     // Get diffuse color
-    vec3 color = texture(diffuseMap, fs_in.TexCoords).rgb;
+    vec3 color = texture(texture_diffuse1, fs_in.TexCoords).rgb;
     // Ambient
-    vec3 ambient = 0.1 * color;
-    // Diffuse
-    vec3 lightDir = normalize(fs_in.LightPos - fs_in.FragPos);
+    vec3 ambient = 0.5 * color;
+    vec3 lightDir = normalize(fs_in.LightPos  - fs_in.FragPos);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;
     // Specular
