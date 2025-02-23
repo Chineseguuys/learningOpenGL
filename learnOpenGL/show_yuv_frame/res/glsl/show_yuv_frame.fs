@@ -37,17 +37,23 @@ void main() {
         v = texture(texV, texCoord).r;
     }
 
-    // YUV 归一化（假设输入范围是 16-235）
+    // YUV 归一化（假设输入范围是 16-235）TV Range
     vec3 yuv = vec3(y, u, v) - vec3(16.0 / YUV_MAXIMUM, 128.0 / YUV_MAXIMUM, 128.0 / YUV_MAXIMUM);
 
     // 矩阵转换
     vec3 rgb;
     if (whichMatrix == BT601) {
-        rgb = transpose(yuv2rgb_bt601) * yuv;
+        rgb.r = 1.164 * yuv.r + 1.596 * yuv.b;
+        rgb.g = 1.164 * yuv.r - 0.392 * yuv.g - 0.813 * yuv.b;
+        rgb.b = 1.164 * yuv.r + 2.017 * yuv.g;
     }else if (whichMatrix == BT709) {
-        rgb = transpose(yuv2rgb_bt709) * yuv;
+        rgb.r = 1.164 * yuv.r + 1.793 * yuv.b;
+        rgb.g = 1.164 * yuv.r - 0.213 * yuv.g - 0.533 * yuv.b;
+        rgb.b = 1.164 * yuv.r + 2.112 * yuv.g;
     } else {
-        rgb = yuv2rgb_bt601 * yuv; 
+        rgb.r = 1.164 * yuv.r + 1.596 * yuv.b;
+        rgb.g = 1.164 * yuv.r - 0.392 * yuv.g - 0.813 * yuv.b;
+        rgb.b = 1.164 * yuv.r + 2.017 * yuv.g;
     }
     FragColor = vec4(rgb, 1.0);
 }

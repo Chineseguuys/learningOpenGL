@@ -20,7 +20,13 @@ if is_plat("windows") then
     --set_pcxxheader("pch.h")    -- 可选：预编译头加速调试
 elseif is_os("linux") then
     set_toolchains("gcc")
+    add_defines("USING_BIG_ENDIAN")
 end
+
+if is_mode("debug") then
+    set_symbols("debug")
+end
+
 
 target("glad")
     set_kind("static")
@@ -56,7 +62,7 @@ target("mesh")
 
 target("show_yuv_frame")
     set_kind("binary")
-    add_files("src/main.cpp")
+    add_files("src/main_hlg.cpp")
     add_includedirs("include/")
     add_includedirs("thirdParty/")
     add_includedirs("thirdParty/glad/v_4.3/include/")
