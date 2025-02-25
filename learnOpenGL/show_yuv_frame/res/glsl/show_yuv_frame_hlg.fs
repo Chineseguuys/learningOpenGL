@@ -11,6 +11,11 @@ const float HLG_C = 0.55991073;
 const float HLG_REF_WHITE = 1000.0;  // 参考亮度 (nit)
 const float BINARY_16BIT_MAX = 65535.0;
 
+// HLG OOTF
+const float OOTF_GAMMA = 1.2;
+const float REF_PEAK_INTS = 400;
+const float MAX_CLL = 1000.0;
+
 // SDR 参数
 const float SDR_MAX_NITS = 100.0;    // SDR 峰值亮度（通常 80-100 nit）
 const float GAMMA = 2.2;             // SDR Gamma 值
@@ -66,6 +71,18 @@ vec3 eotf(vec3 rgb_nonlinear) {
     return rgb_linear;
 }
 
+vec3 ootf(vec3 rgb) {
+    float maxSceneLuminance = max(max(rgb.r, rgb.g), rgb.b);
+    float alpha = pow(maxSceneLuminance / REF_PEAK_INTS, 1.0 - OOTF_GAMMA);
+
+    vec3 displayRgb;
+    displayRgb.r = alpha * pow(rgb.r, OOTF_GAMMA);
+    displayRgb.g = alpha * pow(rgb.g, OOTF_GAMMA);
+    displayRgb.b = alpha * pow(rgb.b, OOTF_GAMMA);
+
+    return displayRgb;
+}
+
 // 简单色调映射（Reinhard 算法）
 vec3 toneMapReinhard(vec3 hdr) {
     return hdr / (hdr + 1.0);  // 将 HDR 压缩到 [0,1]
@@ -94,11 +111,14 @@ void main() {
 
     rgb = eotf(rgb);
 
-    // nonlinear -> linear
-    vec3 linearRgb = rgb;
+    vec3 linearRgb = rgb * HLG_REF_WHITE;
+
+    // OOTF
+    vec3 displayRgb = ootf(linearRgb);
+    displayRgb = displayRgb / MAX_CLL;
 
     // bt2020 to BT709
-    vec3 sRgb = transpose(BT2020_TO_BT709) * linearRgb;
+    vec3 sRgb = transpose(BT2020_TO_BT709) * displayRgb;
     // gamma
     sRgb = pow(sRgb, vec3(1.0 / GAMMA));
 
