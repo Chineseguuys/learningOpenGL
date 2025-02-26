@@ -15,6 +15,10 @@ const float BINARY_16BIT_MAX = 65535.0;
 const float OOTF_GAMMA = 1.2;
 const float REF_PEAK_INTS = 400;
 const float MAX_CLL = 1000.0;
+const float ootf_A = 0.2627;
+const float ootf_B = 0.6780;
+const float ootf_C = 0.0593;
+const float epsilon = 0.05;
 
 // SDR 参数
 const float SDR_MAX_NITS = 100.0;    // SDR 峰值亮度（通常 80-100 nit）
@@ -71,14 +75,12 @@ vec3 eotf(vec3 rgb_nonlinear) {
     return rgb_linear;
 }
 
+// it is right?
 vec3 ootf(vec3 rgb) {
-    float maxSceneLuminance = max(max(rgb.r, rgb.g), rgb.b);
-    float alpha = pow(maxSceneLuminance / REF_PEAK_INTS, 1.0 - OOTF_GAMMA);
+    float Y_S = ootf_A * rgb.r + ootf_B * rgb.g + ootf_C * rgb.b;
 
     vec3 displayRgb;
-    displayRgb.r = alpha * pow(rgb.r, OOTF_GAMMA);
-    displayRgb.g = alpha * pow(rgb.g, OOTF_GAMMA);
-    displayRgb.b = alpha * pow(rgb.b, OOTF_GAMMA);
+    displayRgb = rgb * pow(Y_S, OOTF_GAMMA - 1.0);
 
     return displayRgb;
 }
@@ -111,11 +113,8 @@ void main() {
 
     rgb = eotf(rgb);
 
-    vec3 linearRgb = rgb * HLG_REF_WHITE;
-
     // OOTF
-    vec3 displayRgb = ootf(linearRgb);
-    displayRgb = displayRgb / MAX_CLL;
+    vec3 displayRgb = ootf(rgb);
 
     // bt2020 to BT709
     vec3 sRgb = transpose(BT2020_TO_BT709) * displayRgb;
