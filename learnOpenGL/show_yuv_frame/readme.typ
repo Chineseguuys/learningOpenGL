@@ -48,6 +48,39 @@ $alpha$ 是以 $"cd"slash m^2$为单位的用户增益变量。它代表了$L_W$
 
 $gamma$ 为系统伽马射线。显示器标称亮度为 $1000 "cd"slash m^2$ 时，$gamma$ 的值为 1.2。
 
+== HLG 参考 EOTF
+
+#align(center)[
+  $F_D = "EOTF"[max(0, (1 - beta) E^' + beta)]$ \
+  $= "OOTF"["OETF"^(-1) [max(0, (1 -  beta) E^' + beta)]]$
+]
+
+$F_D$ 是显示的线性分量 ${R_D, G_D, B_D}$ 的亮度,单位为 $"cd"slash m^2$。
+
+$E^'$ 是为 HLG 参考 OETF 定义的非线性信号 ${R^', G^', B^'}$。
+
+$beta$ 是用于提高用户黑色水平的变量。
+
+OOTF[] 和 HLG 参数 OOTF 的定义相同。
+
+$ 
+  "OETF"^(-1)[x] = cases(
+    frac(x^2, 3) "              " 0 lt.eq.slant x lt.eq.slant frac(1,2),
+    { exp((x - c) / a) + b } / 12 "   " frac(1, 2) lt x lt.eq.slant 1
+  )
+$
+
+参数值 a, b, c 与 HLG 参考 OETF 的定义相同。
+
+并且： 
+
+$
+  beta = sqrt(3 (L_B / L_W)^(1 / gamma))
+$
+
+$L_W$ 是以 $"cd/"m^2$为单位时消色差像素显示的额定峰值亮度。
+
+$L_B$ 是以 $"cd/"m^2$为单位时黑色的显示亮度
 
 == links
 
