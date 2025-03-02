@@ -3,29 +3,9 @@
 #define YUV_MAXIMUM 255.0
 #define BT601 0
 #define BT709 1
-#define USE_PQ_OOTF 0
-#define USE_SDR_GAMMA 1
 
-const float BINARY_16BIT_MAX = 65535.0;
-
-// PQ EOTF 参数
-const float PQ_M1 = 0.159301757;
-const float PQ_M2 = 78.84375;
-const float PQ_C1 = 0.8359375;
-const float PQ_C2 = 18.8515625;
-const float PQ_C3 = 18.6875;
-const float PQ_MAX_REF_WHITE = 10000.0;
-
-// SDR 参数
-const float SDR_MAX_NITS = 100.0;    // SDR 峰值亮度（通常 80-100 nit）
-const float GAMMA = 2.2;             // SDR Gamma 值
-
-// 色域转换矩阵：BT.2020 → BT.709
-const mat3 BT2020_TO_BT709 = mat3(
-    1.6605, -0.5876, -0.0728,
-    -0.1246, 1.1329, -0.0083,
-    -0.0182, -0.1006, 1.1187
-);
+#define USE_PQ_EOTF 0
+#define HDR_TO_SDR 0
 
 in vec2 texCoord;
 out vec4 FragColor;
@@ -57,11 +37,20 @@ const mat3 yuv2rgb_bt2020nc = mat3(
     1.0, 1.8814, 0.0
 );
 
-const mat3 LMS_MATRIX = mat3(
-    3.43661, -0.79133, -0.0259499,
-    -2.50645,  1.98360, -0.0989137,
-    0.06984, -0.192271, 1.12486
+const float PQ_M1 = 0.159301757;
+const float PQ_M2 = 78.84375;
+const float PQ_C1 = 0.8359375;
+const float PQ_C2 = 18.8515625;
+const float PQ_C3 = 18.6875;
+
+// 色域转换矩阵：BT.2020 → BT.709
+const mat3 BT2020_TO_BT709 = mat3(
+    1.6605, -0.5876, -0.0728,
+    -0.1246, 1.1329, -0.0083,
+    -0.0182, -0.1006, 1.1187
 );
+
+const float GAMMA = 2.2;             // SDR Gamma 值
 
 vec3 eotf_pq(vec3 rgb_nonlinear) {
     vec3 V = clamp(rgb_nonlinear, 0.0, 1.0);
@@ -82,14 +71,13 @@ vec3 ootf_pq(vec3 rgb_linear) {
     return displayRgb;
 }
 
-vec3 acesTonemap(vec3 x) {
-    const float a = 2.51;
-    const float b = 0.03;
-    const float c = 2.43;
-    const float d = 0.59;
-    const float e = 0.14;
-    return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
-}
+const mat3 colorMatrix = mat3(
+    1.16438, 0.00, 1.67867,
+    1.16438, -0.18733, -0.65042,
+    1.16438, 2.14177, 0.00
+);
+
+const vec3 colorMatrix_c = vec3(-0.91569, 0.34746, -1.14815);
 
 
 void main() {
@@ -103,24 +91,21 @@ void main() {
         v = texture(texV, texCoord).r;
     }
 
-    // reflect value to raw value, value has been normalized to raw_value / BINARY_16BIT_MAX
-    vec3 yuv = vec3(y, u, v) * BINARY_16BIT_MAX / 1000.0 - vec3(0.0, 0.5, 0.5);    // range [0, 1000] -> [0.0, 1.0]
+    vec3 yuv = vec3(y, u, v) ;
 
-    // BT2020nc transfer matrix
+    vec3 color = yuv * vec3(64.2500, 64.2500, 64.2500);
+
     vec3 rgb;
-    rgb = transpose(yuv2rgb_bt2020nc) * yuv;
+    rgb = transpose(colorMatrix) * color + colorMatrix_c;
 
+#if USE_PQ_EOTF
     rgb = eotf_pq(rgb);
-#if USE_PQ_OOTF
     rgb = ootf_pq(rgb);
 #endif
-    // bt2020 to BT709
-    vec3 sRgb = transpose(BT2020_TO_BT709) * rgb;
-#if USE_SDR_GAMMA
-    // gamma
-    sRgb = pow(sRgb, vec3(1.0 / GAMMA));
-    FragColor = vec4(sRgb, 1.0);
-#else
-    FragColor = vec4(sRgb, 1.0);
+
+#if HDR_TO_SDR
+    rgb = pow(rgb, vec3(1.0 / GAMMA));
 #endif
+
+    FragColor = vec4(rgb, 1.0);
 }
