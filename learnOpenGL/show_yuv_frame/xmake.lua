@@ -62,7 +62,7 @@ target("mesh")
 
 target("show_yuv_frame")
     set_kind("binary")
-    add_files("src/main_hlg.cpp")
+    add_files("src/main_pq.cpp")
     add_includedirs("include/")
     add_includedirs("thirdParty/")
     add_includedirs("thirdParty/glad/v_4.3/include/")
